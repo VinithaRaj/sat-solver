@@ -39,7 +39,6 @@ std::string inorder(Node* root,std::string sq)
         return sq;
     }
     inorder(root->right,sq);
-    //cout << root->data << " ";
     if (root->data=='+'){
         if ((root->left->data=='0') && (root->right->data=='0')){
             root->data='0';
@@ -397,7 +396,7 @@ int main (int argc, char *argv[])
                 Node* root = constructBST(vfinal);
                 std::string fstr;
                 std::string finalstring = inorder(root,fstr);
-                cout << "Output :" << root->data<<endl;
+                cout << root->data<<endl;
                 
             }  
             
