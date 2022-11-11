@@ -287,7 +287,7 @@ int main (int argc, char *argv[])
         map<std::string, std::string> mymap,formmap;
         if (input.find(";") == std::string::npos) {
             //std::cout<<"here"<<'\n';
-            std::cout << "Error: Invalid input" << '\n';
+            std::cout << "Error: invalid input" << '\n';
             run=false;
         }
         else{
@@ -303,7 +303,7 @@ int main (int argc, char *argv[])
                 size_t pos2 = i.find(":");
                 if (formmap.count(i.substr(0, pos2))){
                     if(formmap[i.substr(0, pos2)] != i.substr(pos2 + 1, string::npos)){
-                        cout << "Error: Contradicting Assignment" <<endl;
+                        cout << "Error: contradicting assignment" <<endl;
                         run = false;
                         break;
                     }
@@ -335,7 +335,7 @@ int main (int argc, char *argv[])
                 }}
                 else if (((find_str.size()==0)||(sub_str.size()==0))&&istextinput){
                     run=false;
-                    cout << "Error: Incomplete Assignment" <<endl;
+                    cout << "Error: incomplete assignment" <<endl;
                     mapempty=true;
                     break;
                 }
@@ -365,15 +365,15 @@ int main (int argc, char *argv[])
                 int i=0;
                 while ((i<vfinal.size())&&run){
                     if((vfinal[i]=='+' || vfinal[i]=='*')&&(vfinal[i-1]=='+' || vfinal[i-1]=='*')){
-                        cout << "Error: Invalid Input" <<endl;
+                        cout << "Error: invalid input" <<endl;
                         run = false;
                     }
                     else if((vfinal[i]=='(')&&isdigit(vfinal[i-1])||(vfinal[i-1]==')')&&isdigit(vfinal[i])){
-                        cout << "Error: Invalid Input" <<endl;
+                        cout << "Error: invalid input" <<endl;
                         run = false;
                     }
                     else if(((vfinal[i-1]=='(')&&((vfinal[i]=='*')||(vfinal[i]=='+'))) || ((vfinal[i]==')')&&((vfinal[i-1]=='+')||(vfinal[i-1]=='*')))){
-                        cout << "Error: Invalid Input" <<endl;
+                        cout << "Error: invalid input" <<endl;
                         run = false;
                     }
                     if(vfinal[i]=='('){
@@ -386,7 +386,7 @@ int main (int argc, char *argv[])
                 }
                 if (brackcounter!=0){
                     run = false;
-                    cout << "Error: Invalid Input" <<endl;
+                    cout << "Error: invalid input" <<endl;
                 }
             }
             

@@ -1,15 +1,15 @@
-Error: Contradicting Assignment
-Output :1
-Output :0
-Error: Invalid input
+Error: contradicting assignment
+1
+0
 Error: invalid input
-Error: Incomplete Assignment
-Output :1
-Output :0
-Output :1
-Error: Invalid Input
-Output :1
-Error: Contradicting Assignment
 Error: invalid input
-Output :0
-Output :1
+Error: incomplete assignment
+1
+0
+1
+Error: invalid input
+1
+Error: contradicting assignment
+Error: invalid input
+0
+1
