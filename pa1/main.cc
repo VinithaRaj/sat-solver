@@ -74,16 +74,24 @@ Node* insertright(Node* root, int end, int ind,vector<char> const &v )
     Node* cent;
     if ((ind+2)<v.size()){
         if (v[end+1]=='*'  || v[end+1]=='+'){
+            //if digit and next to it is an operator
             if (ind==end){
+                // if its a sigle digit
                 cent = new Node(v[ind+1],ind);
                 cent->left = new Node(v[ind],ind);
             }
             else{
+                // if its a bracket 
                 cent = new Node(v[end+1],end);
                 auto first = v.cbegin() + ind+1;
                 auto last = v.cbegin() + end + 1;
                 vector<char> v2(first,last-1);
-                cent->left = insertright(cent, 0,0,v2);
+                if (isdigit(v2[0])){
+                    cent->left = insertright(cent, 0,0,v2);
+                }
+                else{
+                    cent->left = insertright(cent, v2.size()-1,0,v2);
+                }
             }
             if(v[end+2]!='('  && v[end+2]!=')'){
                 cent->right = insertright(cent, end+2,end+2,v);
@@ -111,9 +119,32 @@ Node* insertright(Node* root, int end, int ind,vector<char> const &v )
             ind+=1;
             end+=1;
             if (ind==end){
-                cent = new Node(v[ind+1],ind);
-                cent->left = new Node(v[ind-1],ind-1);
-                cent->left->left = new Node(v[ind],ind);
+                // this is the number node
+               if (isdigit(v[ind])){
+                    cent = new Node(v[ind+1],ind);
+                    cent->left = new Node(v[ind-1],ind-1);
+                    cent->left->left = new Node(v[ind],ind);
+               }
+               else if (v[ind]=='('){
+                   int brackindneg=ind+1;
+                   int brackindcounter=1;
+                   while((brackindcounter!=0)&&(brackindneg<v.size())){
+                       if(v[brackindneg]=='('){
+                           brackindcounter+=1;
+                       }
+                       else if(v[brackindneg]==')'){
+                           brackindcounter-=1;
+                       }
+                       brackindneg+=1;
+                   }
+                   cent = new Node(v[ind-1],ind-1);
+                    auto first = v.cbegin() + ind;
+                    auto last = v.cbegin() + brackindneg + 1;
+                    
+                    vector<char> v2(first,last-1);
+                    cent->left = insertright(cent, v2.size()-1,0,v2);
+               }
+               
             }
             else{
                 cent = new Node(v[end+1],end);
@@ -122,26 +153,6 @@ Node* insertright(Node* root, int end, int ind,vector<char> const &v )
                 vector<char> v2(first,last-1);
                 cent->left = new Node('-',end-1);
                 cent->left->left = insertright(cent, 0,0,v2);
-            }
-            if(v[end+2]!='('  && v[end+2]!=')'){
-                cent->right = insertright(cent, end+2,end+2,v);
-            }
-            else{
-                int j=ind+2;
-                queue<int> g;
-                if (v[ind+2]=='('){
-                    g.push(1);
-                }
-                while (!g.empty()){
-                    j+=1;
-                    if (v[j]==')'){
-                        g.pop();
-                    }
-                    else if (v[j]=='('){
-                        g.push(1);
-                    }
-                }
-                cent->right = insertright(cent, j,ind+2,v);
             }
             
         }
@@ -162,10 +173,47 @@ Node* insertright(Node* root, int end, int ind,vector<char> const &v )
         }
         
         else if (v[end]=='('  || v[end]==')'){
-            auto first = v.cbegin() + ind+1;
-            auto last = v.cbegin() + end + 1;
-            vector<char> v2(first,last-1);
-            cent = insertright(cent, 0,0,v2);
+           if(ind!=end){
+                auto first = v.cbegin() + ind+1;
+                auto last = v.cbegin() + end + 1;
+                vector<char> v2(first,last-1);
+                if (isdigit(v2[0])||(v2[0]=='-')){
+                    cent = insertright(cent, 0,0,v2);
+                }
+                else{
+                    int meout=v2.size()-1;
+                    
+                    cent = insertright(cent, meout,0,v2);
+                    
+                }
+                
+            }
+            else{
+                int brackcounter=1;
+                int brackindx=ind+1;
+                while ((brackcounter!=0)&&(brackindx<v.size())){
+                    if (v[brackindx]==')'){
+                        brackcounter-=1;
+                    }
+                    else if (v[brackindx]=='('){
+                        brackcounter+=1;
+                    }
+                    brackindx+=1;
+                }
+                auto first = v.cbegin() + ind+1;
+                auto last = v.cbegin() + brackindx + 1;
+                vector<char> v2(first,last-1);
+                
+                if (isdigit(v2[0])||(v2[0]=='-')){
+                    cent = insertright(cent, 0,0,v2);
+                }
+                else{
+                    int meout=v2.size()-1;
+                    cent = insertright(cent, meout,0,v2);
+                    
+                }
+            }
+            
             
         }
         
@@ -214,31 +262,77 @@ Node* insert(Node* root, char key,int ind,vector<char> const &v)
             else if(v[counter]=='('  || v[counter]==')'){
                 int j=counter;
                 queue<int> g;
+                int cbracks=0;
                 if (v[counter]=='('){
+                    cbracks+=1;
                     g.push(1);
                 }
-                while (!g.empty()){
+                //while (!g.empty()){
+                while (cbracks!=0){
                     if (v[j+1]==')'){
+                        cbracks-=1;
                         g.pop();
                     }
                     else if (v[j+1]=='('){
+                        cbracks+=1;
                         g.push(1);
                     }
                     j+=1;
+                    
                 }
-                
                 auto first = v.cbegin() + counter+1;
                 auto last = v.cbegin() + j + 1;
                 vector<char> v2(first,last-1);
                 if ((j+1)<v.size()){
+                    //to check if there are operators after
                     root  = new Node(v[j+1],j+1);
-                    root->left = insertright(root, 0,0,v2);
+                    if (isdigit(v2[0])){
+                        root->left = insertright(root, 0,0,v2);
+                    }
+                    else{
+                        root->left = insertright(root, v2.size()-1,0,v2);
+                    }
                     root->right = insertright(root, j+2,j+2,v);
                 }
                 else{
-                    root = insertright(root, 0,0,v2);
+                    if (isdigit(v2[0])||(v2[0]=='-')){
+                        root = insertright(root, 0,0,v2);
+                    }
+                    else{
+                        root = insertright(root, v2.size()-1,0,v2);
+                    }
                 }
                 return root;
+            }
+            else if (v[counter]=='-'){
+                
+                if (isdigit(v[counter+1])){
+                    root = new Node(v[counter],counter);
+                    root->left = new Node(v[counter-1],counter-1);
+                    root->right = insertright(root, counter+1,counter+1,v);
+                    return root;
+                }
+                else{
+                    int brackinscount=1;
+                    int brackinsind=counter+1;
+                    while((brackinscount!=0)&&brackinsind<v.size()){
+                        if(v[brackinsind]=='('){
+                            brackinscount+=1;
+                        }
+                        else if(v[brackinsind]==')'){
+                            brackinscount-=1;
+                        }
+                        brackinsind+=1;
+                    }
+                    auto first = v.cbegin() + ind+1;
+                    auto last = v.cbegin() + brackinsind + 1;
+                    vector<char> v2(first,last-1);
+                    root = new Node('-',ind);
+                    root->left = insertright(root, v2.size()-1,0,v2);
+                    //root->right = insertright(root, counter+1,counter+1,v);
+                    return root;
+                }
+                
             }
             else{
                 root = new Node(v[counter],counter);
@@ -246,6 +340,7 @@ Node* insert(Node* root, char key,int ind,vector<char> const &v)
                 root->right = insertright(root, counter+1,counter+1,v);
                 return root;
             }
+
         }
     }
     return root;
@@ -280,10 +375,12 @@ int main (int argc, char *argv[])
 
     while (getline(std::cin, input) && input != "quit")
     {
-        //char s3[] = "A + B * -0 * (1 + -C);A:1, B:1,C:1";
         int i=1;
         bool run=true;
+        input.erase(std::find_if(input.rbegin(), input.rend(), std::bind1st(std::not_equal_to<char>(), ',')).base(), input.end());
+
         const char* s3 = input.c_str();
+        
         map<std::string, std::string> mymap,formmap;
         if (input.find(";") == std::string::npos) {
             //std::cout<<"here"<<'\n';
@@ -291,6 +388,7 @@ int main (int argc, char *argv[])
             run=false;
         }
         else{
+            
             vector<string> v = split (s3, ";");
             vector<string> form = split (v[1], ",");
             string assignment=v[0];
@@ -300,6 +398,7 @@ int main (int argc, char *argv[])
             for(string i:form){
                 i.erase(std::remove_if(i.begin(), i.end(), ::isspace),
                     i.end());
+               
                 size_t pos2 = i.find(":");
                 if (formmap.count(i.substr(0, pos2))){
                     if(formmap[i.substr(0, pos2)] != i.substr(pos2 + 1, string::npos)){
@@ -329,7 +428,17 @@ int main (int argc, char *argv[])
                 //cout << keyval.first << "=>" << keyval.second << endl;
                 find_str=keyval.first;
                 sub_str = keyval.second;
-                if ((find_str.size()>0)&&(sub_str.size()>0)&&istextinput){
+                //cout << find_str << "=>" << sub_str << endl;
+                if ((find_str.size()>=10)||((find_str.size()>0)&&isdigit(find_str[0]))){
+                    run=false;
+                    //std::cout<<"here 1"<<'\n';
+                    cout << "Error: invalid input" <<endl;
+                    //mapempty=true;
+                    break;
+                    
+                }
+                else if ((find_str.size()>0)&&(sub_str.size()>0)&&istextinput){
+                    
                 while((index = assignment.find(find_str)) != string::npos){ 
                    assignment.replace(index, find_str.length(), sub_str); 
                 }}
@@ -342,7 +451,11 @@ int main (int argc, char *argv[])
             }
             
             //cout << "Assignment :" << assignment<<endl;
-            
+            std::string find_str2="--";
+            while((index = assignment.find(find_str2)) != string::npos){ 
+                   assignment.replace(index, find_str2.length(), ""); 
+                }
+            //cout << "Assignment len:" << assignment<<endl;
             //Assgning to vector
             assignment.erase(std::remove_if(assignment.begin(), assignment.end(), ::isspace),
                     assignment.end());
@@ -350,11 +463,18 @@ int main (int argc, char *argv[])
             if (run){
                 bool check;
                 for (int i = 0; i < assignment.size(); ++i) {
-                    if(isdigit(assignment[i])||(assignment[i]=='*'||assignment[i]=='+'||assignment[i]=='('||assignment[i]=='-'||assignment[i]==')')){
+                    if(isalpha(assignment[i])){
+                        run = false;
+                        cout << "Error: incomplete assignment" <<endl;
+                        break;
+                        
+                    }
+                    else if((isdigit(assignment[i])&&(assignment[i]=='1'||assignment[i]=='0'))||(assignment[i]=='*'||assignment[i]=='+'||assignment[i]=='('||assignment[i]=='-'||assignment[i]==')')){
                         continue;
                     }
                     else{
                         run=false;
+                        //std::cout<<"here 2"<<'\n';
                         cout << "Error: invalid input" <<endl;
                         break;
                     }
@@ -364,15 +484,23 @@ int main (int argc, char *argv[])
                 int brackcounter=0;
                 int i=0;
                 while ((i<vfinal.size())&&run){
-                    if((vfinal[i]=='+' || vfinal[i]=='*')&&(vfinal[i-1]=='+' || vfinal[i-1]=='*')){
+                    if(((vfinal[i]=='+' || vfinal[i]=='*')&&(vfinal[i-1]=='+' || vfinal[i-1]=='*'))||(vfinal[vfinal.size()-1]=='-')||(vfinal[vfinal.size()-1]=='+')||(vfinal[vfinal.size()-1]=='*')){
+                        //std::cout<<"here 3"<<'\n';
                         cout << "Error: invalid input" <<endl;
                         run = false;
                     }
                     else if((vfinal[i]=='(')&&isdigit(vfinal[i-1])||(vfinal[i-1]==')')&&isdigit(vfinal[i])){
+                        //std::cout<<"here 4"<<'\n';
                         cout << "Error: invalid input" <<endl;
                         run = false;
                     }
                     else if(((vfinal[i-1]=='(')&&((vfinal[i]=='*')||(vfinal[i]=='+'))) || ((vfinal[i]==')')&&((vfinal[i-1]=='+')||(vfinal[i-1]=='*')))){
+                        //std::cout<<"here 5"<<'\n';
+                        cout << "Error: invalid input" <<endl;
+                        run = false;
+                    }
+                    else if(isdigit(vfinal[i-1])&&isdigit(vfinal[i])){
+                        //std::cout<<"here 6"<<'\n';
                         cout << "Error: invalid input" <<endl;
                         run = false;
                     }
@@ -386,6 +514,7 @@ int main (int argc, char *argv[])
                 }
                 if (brackcounter!=0){
                     run = false;
+                    //std::cout<<"here 7"<<'\n';
                     cout << "Error: invalid input" <<endl;
                 }
             }
@@ -409,21 +538,7 @@ int main (int argc, char *argv[])
     
     return 0;
 }
-// a helper function parsing the input into the formula string and the assignment string
-/*void parseLine(const std::string &line, std::string &formulaStr, std::string &assignmentStr) {
-  // your code starts here
-}
 
-// The program shall continuously ask for new inputs from standard input and output to the standard output
-// The program should terminate gracefully (and quietly) once it sees EOF
-int main() {
-  while (true) // continuously asking for new inputs from standard input
-  {
-    std::string line; // store each input line
-    std::string formulaStr; // store the formula string
-    std::string assignmentStr; // store the assignment string
-    // your code starts here
-  }
-}*/
+
 
 
