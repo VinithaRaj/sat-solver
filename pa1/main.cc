@@ -39,6 +39,7 @@ std::string inorder(Node* root,std::string sq)
         return sq;
     }
     inorder(root->right,sq);
+    
     if (root->data=='+'){
         if ((root->left->data=='0') && (root->right->data=='0')){
             root->data='0';
@@ -56,12 +57,14 @@ std::string inorder(Node* root,std::string sq)
         }
     }
     else if((root->data=='-')){
-        if ((root->left->data=='1')){
+        
+        if ((root->right->data=='1')){
             root->data='0';
         }
-        else{
+        else if ((root->right->data=='0')){
             root->data='1';
         }
+        
     }
     inorder(root->left,sq);
     return sq;
@@ -123,7 +126,8 @@ Node* insertright(Node* root, int end, int ind,vector<char> const &v )
                if (isdigit(v[ind])){
                     cent = new Node(v[ind+1],ind);
                     cent->left = new Node(v[ind-1],ind-1);
-                    cent->left->left = new Node(v[ind],ind);
+                    //cent->left->left = new Node(v[ind],ind);
+                    cent->left->right = new Node(v[ind],ind);
                }
                else if (v[ind]=='('){
                    int brackindneg=ind+1;
@@ -142,7 +146,8 @@ Node* insertright(Node* root, int end, int ind,vector<char> const &v )
                     auto last = v.cbegin() + brackindneg + 1;
                     
                     vector<char> v2(first,last-1);
-                    cent->left = insertright(cent, v2.size()-1,0,v2);
+                    
+                    cent->right = insertright(cent, v2.size()-1,0,v2);
                }
                
             }
@@ -152,7 +157,8 @@ Node* insertright(Node* root, int end, int ind,vector<char> const &v )
                 auto last = v.cbegin() + end + 1;
                 vector<char> v2(first,last-1);
                 cent->left = new Node('-',end-1);
-                cent->left->left = insertright(cent, 0,0,v2);
+                //cent->left->left = insertright(cent, 0,0,v2);
+                cent->left->right = insertright(cent, 0,0,v2);
             }
             
         }
@@ -174,10 +180,11 @@ Node* insertright(Node* root, int end, int ind,vector<char> const &v )
         
         else if (v[end]=='('  || v[end]==')'){
            if(ind!=end){
-                auto first = v.cbegin() + ind+1;
+               auto first = v.cbegin() + ind+1;
                 auto last = v.cbegin() + end + 1;
                 vector<char> v2(first,last-1);
                 if (isdigit(v2[0])||(v2[0]=='-')){
+                    
                     cent = insertright(cent, 0,0,v2);
                 }
                 else{
@@ -224,20 +231,22 @@ Node* insertright(Node* root, int end, int ind,vector<char> const &v )
             end+=1;
             if (ind==end){
                 cent =  new Node(v[ind-1],ind-1);
-                cent->left = new Node(v[ind],ind);
+                //cent->left = new Node(v[ind],ind);
+                cent->right = new Node(v[ind],ind);
             }
             else{
                 auto first = v.cbegin() + ind+1;
                 auto last = v.cbegin() + end + 1;
                 vector<char> v2(first,last-1);
                 cent = new Node('-',end-1);
-                cent->left = insertright(cent, 0,0,v2);
+                //cent->left = insertright(cent, 0,0,v2);
+                cent->right = insertright(cent, 0,0,v2);
             }
             
         }
         else{
             if (ind==end){
-                    cent = new Node(v[ind],ind);
+                cent = new Node(v[ind],ind);
             }
             else{
                 auto first = v.cbegin() + ind+1;
@@ -305,11 +314,12 @@ Node* insert(Node* root, char key,int ind,vector<char> const &v)
                 return root;
             }
             else if (v[counter]=='-'){
-                
-                if (isdigit(v[counter+1])){
-                    root = new Node(v[counter],counter);
-                    root->left = new Node(v[counter-1],counter-1);
-                    root->right = insertright(root, counter+1,counter+1,v);
+                if ((isdigit(v[counter+1]))&&(counter+3)<v.size()){
+                    //root = new Node(v[counter],counter);
+                    root = new Node(v[counter+2],counter+2);
+                    root->left = new Node(v[counter],counter);
+                    root->left->right = new Node(v[counter+1],counter+1);
+                    root->right = insertright(root, counter+3,counter+3,v);
                     return root;
                 }
                 else{
@@ -328,7 +338,8 @@ Node* insert(Node* root, char key,int ind,vector<char> const &v)
                     auto last = v.cbegin() + brackinsind + 1;
                     vector<char> v2(first,last-1);
                     root = new Node('-',ind);
-                    root->left = insertright(root, v2.size()-1,0,v2);
+                    //root->left = insertright(root, v2.size()-1,0,v2);
+                    root->right = insertright(root, v2.size()-1,0,v2);
                     //root->right = insertright(root, counter+1,counter+1,v);
                     return root;
                 }
