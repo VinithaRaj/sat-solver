@@ -299,14 +299,15 @@ Node* insertright(Node* root, int end, int ind,vector<char> const &v, bool inver
                        }
                        brackindneg+=1;
                    }
-                   cent = new Node(v[ind-1],ind-1);
+                   cent = insertright(cent, brackindneg,brackindneg,v,inverted);
+                   cent->left = new Node(v[ind-1],ind-1);
                     auto first = v.cbegin() + ind;
                     auto last = v.cbegin() + brackindneg + 1;
                     
                     vector<char> v2(first,last-1);
                     
                     /*cent->left = insertright(cent, v2.size()-1,0,v2);*/
-                    cent->right = insertright(cent, v2.size()-1,0,v2,false);
+                    cent->left->right = insertright(cent, v2.size()-1,0,v2,false);
                }
                
             }
@@ -691,7 +692,7 @@ int main (int argc, char *argv[])
                 
                 inorder2(root);
                 inorder3(root);
-                cout << valtru<<endl;
+                cout <<valtru<<endl;
                 
                 
             }  
