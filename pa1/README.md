@@ -20,7 +20,7 @@ Commit your changes and submit on GitLab.
 Run
 
 ```shell
-source ./eval.sh
+bash ./eval.sh
 ```
 
 This will automatically compile your code and test your code with sample cases. If there's no output, you've prefectly passed all the sample cases. Otherwise, the difference will be printed.
