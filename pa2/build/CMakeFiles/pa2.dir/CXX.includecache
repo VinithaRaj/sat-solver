@@ -121,12 +121,6 @@ minisat/mtl/XAlloc.h
 ../minisat/minisat/utils/minisat/mtl/XAlloc.h
 
 /home/vr3rajag/tutorial/vr3rajag/pa2/main.cc
-memory
--
-minisat/core/SolverTypes.h
-/home/vr3rajag/tutorial/vr3rajag/pa2/minisat/core/SolverTypes.h
-minisat/core/Solver.h
-/home/vr3rajag/tutorial/vr3rajag/pa2/minisat/core/Solver.h
 iostream
 -
 string
@@ -145,4 +139,10 @@ typeinfo
 -
 queue
 -
+memory
+-
+minisat/core/SolverTypes.h
+/home/vr3rajag/tutorial/vr3rajag/pa2/minisat/core/SolverTypes.h
+minisat/core/Solver.h
+/home/vr3rajag/tutorial/vr3rajag/pa2/minisat/core/Solver.h
 
