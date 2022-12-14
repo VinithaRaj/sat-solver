@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/minisat_core.dir/minisat/core/Main.cc.o"
-  "minisat_core.pdb"
   "minisat_core"
+  "minisat_core.pdb"
 )
 
 # Per-language clean rules from dependency scanning.
