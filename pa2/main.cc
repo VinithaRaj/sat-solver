@@ -113,9 +113,14 @@ vector<vector<int>> namenodes(Node* root){
         Node* curnode;
         curnode = q.front();
         q.pop();
-        if (!namedcodes.count(curnode->data)&&(curnode->code==-1)){
+        if ((isdigit(curnode->data)&&!namedcodes.count(curnode->data)&&(curnode->code==-1))){
             curnode->code=counter;
             namedcodes[curnode->data] = counter;
+            counter+=1;
+        }
+        else if((curnode->data=='+')||(curnode->data=='*')||(curnode->data=='-')){
+            curnode->code=counter;
+            //namedcodes[curnode->data] = counter;
             counter+=1;
         }
         else if(namedcodes.count(curnode->data)){
@@ -187,21 +192,21 @@ Node* insmult(Node* root, vector<char> const &v,bool inbracks){
         }
         if (found==false){
             if (v[0]=='-'){
-                //cout<<"i am me"<<endl;
+                cout<<"i am me"<<endl;
                 auto first = v.cbegin() + 2;
                 auto last = v.cbegin()+v.size()-1;
                 vector<char> v2(first,last);
-                //cout<<v2.size()<<v2[0]<<v2[v2.size()-1]<<endl;
+                cout<<v2.size()<<v2[0]<<v2[v2.size()-1]<<endl;
                 cent = new Node(v[0],0);
                 cent->left=insin(root,v2,true);
             }
             else{
                 //its one unit of bracket
-                //cout<<"i am me"<<endl;
+                cout<<"i am me"<<endl;
                 auto first = v.cbegin() + 1;
                 auto last = v.cbegin()+v.size()-1;
                 vector<char> v2(first,last);
-                //cout<<v2.size()<<v2[0]<<v2[v2.size()-1]<<endl;
+                cout<<v2.size()<<v2[0]<<v2[v2.size()-1]<<endl;
                 cent = insin(root,v2,true); 
             }
         }
@@ -212,16 +217,16 @@ Node* insmult(Node* root, vector<char> const &v,bool inbracks){
                 auto first = v.cbegin() + bind+2;
                 auto last = v.cbegin()+v.size();
                 vector<char> v2(first,last);
-                //cout<<v2[0]<<v2[v2.size()-1]<<v2.size()<<"hi"<<endl;
+                cout<<v2[0]<<v2[v2.size()-1]<<v2.size()<<"hi"<<endl;
                 cent->right->left = insin(root,v2,true);
-                //cout<<"have i returned"<<cent->right->left->data<<endl;
+                cout<<"have i returned"<<cent->right->left->data<<endl;
             }
             else{
                 cent =new  Node(v[bind],0);
                 auto first = v.cbegin() + bind+2;
                 auto last = v.cbegin()+v.size()-1;
                 vector<char> v2(first,last);
-                //cout<<bind<<v[bind]<<v2[0]<<v2[v2.size()-1]<<endl;
+                cout<<bind<<v[bind]<<v2[0]<<v2[v2.size()-1]<<endl;
                 cent->right = insin(root,v2,true); 
             }
             if(bind>2){
@@ -231,7 +236,7 @@ Node* insmult(Node* root, vector<char> const &v,bool inbracks){
                 cent->left = insmult(root,v2,inbracks);
             }
             else{
-                //cout<<"am i here"<<endl;
+                cout<<"am i here"<<endl;
                 cent->left =new  Node(v[0],0);
             }
         }
@@ -253,7 +258,7 @@ Node* insmult(Node* root, vector<char> const &v,bool inbracks){
             auto first = v.cbegin();
             auto last = v.cbegin()+v.size()+bind;
             vector<char> v2(first,last);
-            //cout<<cent->data<<"whai"<<v2.size()<<endl;
+            cout<<cent->data<<"whai"<<v2.size()<<endl;
             cent->left = insmult(root,v2,inbracks);
         }
         else{
@@ -295,7 +300,7 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
                 auto first = v.cbegin() + 2;
                 auto last = v.cbegin() + bind;
                 vector<char> v2(first,last);
-                //cout<<v2[0]<<v2[v2.size()-1]<<"okayyyy"<<endl;
+                cout<<v2[0]<<v2[v2.size()-1]<<"okayyyy"<<endl;
                 cent->left = insin(root, v2,true);
                 /*auto first2 = v.cbegin() + bind+1;
                 auto last2 = v.cbegin()+v.size();
@@ -320,14 +325,14 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
                 bind+=1;
             }
             if (bind==(v.size()-1)){
-                //cout<<"dafrick"<<endl;
+                cout<<"dafrick"<<endl;
                 auto first = v.cbegin() + 1;
                 auto last = v.cbegin()+bind;
                 vector<char> v2(first,last);
                 cent = insin(root,v2,inbracks);
             }
             else if(v[bind+1]=='+'){
-                //cout<<"moi"<<endl;
+                cout<<"moi"<<endl;
                 cent = new Node(v[bind+1],0);
                 auto first = v.cbegin() + 1;
                 auto last = v.cbegin()+bind;
@@ -339,7 +344,7 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
                 cent->right = insin(root,v3,inbracks);
             }
             else if(v[bind+1]=='*'){
-                //cout<<"great"<<endl;
+                cout<<"great"<<endl;
                 bool found=false;
                 int brcount=0;
                 int brind=bind+1;
@@ -356,22 +361,22 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
                     }
                     brind+=1;
                 }
-                //cout << "im brind"<<found<<brind << endl;
+                cout << "im brind"<<found<<brind << endl;
                 if(found==true){
                     cent = new Node(v[brind],0);
                     auto first = v.cbegin();
                     auto last = v.cbegin()+brind;
                     vector<char> v2(first,last);
-                    //cout<<v2.size()<<endl;
+                    cout<<v2.size()<<endl;
                     cent->left = insmult(root,v2,inbracks);
                     auto first2 = v.cbegin() + brind+1;
                     auto last2 = v.cbegin()+v.size();
                     vector<char> v3(first2,last2);
-                    //cout<<v3.size()<<v2.size()<<v2[0]<<v3[0]<<endl;
+                    cout<<v3.size()<<v2.size()<<v2[0]<<v3[0]<<endl;
                     cent->right = insin(root,v3,inbracks);
                 }
                 else{
-                    //cout << "im here"<<brind << endl;
+                    cout << "im here"<<brind << endl;
                     cent = insmult(root,v,inbracks);
                 }
             }
@@ -392,12 +397,12 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
                     }
                     if((brcount==0)&&(v[brind]=='+')){
                         found=true;
-                        //cout << "im brind 2"<<brind << endl;
+                        cout << "im brind 2"<<brind << endl;
                         break;
                     }
                     brind+=1;
                 }
-                //cout << "im brind"<<brind << endl;
+                cout << "im brind"<<brind << endl;
                 if(found==true){
                     cent = new Node(v[brind],0);
                     auto first = v.cbegin();
@@ -410,9 +415,9 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
                     cent->right = insin(root,v3,inbracks);
                 }
                 else{
-                    //cout << "im here"<<brind << endl;
+                    cout << "im here"<<brind << endl;
                     cent = insmult(root,v,inbracks);
-                    //cout<<"do i reach"<<endl;
+                    cout<<"do i reach"<<endl;
                 }
             }
             else if(v[1]=='+'){
@@ -449,17 +454,17 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
             cent->right->left = new Node(v[2],2);
         }
         else if ((v[1]=='+')||(v[1]=='*')){
-            //cout<<v[0]<<v[2]<<"am i here"<<endl;
+            cout<<v[0]<<v[2]<<"am i here"<<endl;
             cent = new Node(v[1],0);
             cent->right = new Node(v[2],1);
             cent->left = new Node(v[0],2);
         }
         else if (v.size()==1){
-            //cout<<"i get here"<<endl;
+            cout<<"i get here"<<endl;
             cent = new Node(v[0],0);
         }
         else if ((v.size()==2)&&(v[0]=='-')){
-            //cout<<"i get here"<<endl;
+            cout<<"i get here"<<endl;
             cent = new Node(v[0],0);
             cent->left = new Node(v[1],1);
         }
@@ -490,7 +495,47 @@ vector<string> split (string s, string delimiter) {
     res.push_back (s.substr (pos_start));
     return res;
 }
-
+vector<vector<int>> bcp(vector<vector<int>> in){
+    vector<vector<int>> out;
+    for (auto & element : in) 
+  {
+    if(element.size()==1)
+    {
+        cout << element[0] << " ";
+        int pq=element[0];
+        int pqneg=element[0]*(-1);
+        
+        for(auto elemout: in){
+            if (count(elemout.begin(),elemout.end(),pqneg)>0){
+                vector<int> tmpvec;
+                for (auto num:elemout){
+                    if(num!=pqneg){
+                        tmpvec.push_back(num);
+                    }
+                }
+                out.push_back(tmpvec);
+            }
+            else if(count(elemout.begin(),elemout.end(),pq)==0){
+                out.push_back(elemout);
+            }
+        }
+        break;
+    }
+  }
+  bool stillcan=false;
+  for (auto & element2 : out) 
+  {
+      if (element2.size()==1){
+          stillcan=true;
+      }
+  }
+  if (stillcan==true){
+      return bcp(out);
+  }
+  else{
+      return out;
+  }
+}
 int main (int argc, char *argv[])
 {
     
@@ -505,20 +550,20 @@ int main (int argc, char *argv[])
         const char* s3 = input.c_str();
         
         map<std::string, std::string> mymap,formmap;
-        if (input.find(";") == std::string::npos) {
-            //cout<<"here?"<<endl;
+        //if (input.find(";") == std::string::npos) {
+        if (input=="") {
+            cout<<"here?"<<endl;
             std::cout << "Error: invalid input" << '\n';
             run=false;
         }
         else{
-            
-            vector<string> v = split (s3, ";");
-            vector<string> form = split (v[1], ",");
-            string assignment=v[0];
-            
+            //vector<string> v = split (s3, ";");
+            //vector<string> v = input.c_str();
+            //vector<string> form = split (v[1], ",");
+            string assignment=s3;
             //Removing white space and mapping
             char *token2;
-            for(string i:form){
+            /*for(string i:form){
                 i.erase(std::remove_if(i.begin(), i.end(), ::isspace),
                     i.end());
                
@@ -533,9 +578,9 @@ int main (int argc, char *argv[])
                 else{
                     formmap[i.substr(0, pos2)] = i.substr(pos2 + 1, string::npos);
                 }
-            }
+            }*/
             //Printing formula and assignment
-            //cout<<assignment<<"im s3"<<endl;
+            cout<<assignment<<"im s3"<<endl;
             map<std::string, std::string> codenames;
             std::string eachname="";
             int countcodes=1;
@@ -557,7 +602,7 @@ int main (int argc, char *argv[])
             }
             if (eachname!=""&&(!codenames.count(eachname))){
                         codenames[eachname] = to_string(countcodes);
-                        //cout<<eachname<<codenames[eachname]<<"im each"<<endl;
+                        cout<<eachname<<codenames[eachname]<<"im each"<<endl;
                         countcodes+=1;
                     }
             //cout<<codenames["c"]<<"im c"<<endl;
@@ -577,7 +622,7 @@ int main (int argc, char *argv[])
                 find_str=keyval.first;
                 sub_str = keyval.second;
                 if(find_str!=""){
-                    //cout << find_str<<"codes"<<sub_str <<endl;
+                    cout << find_str<<"codes"<<sub_str <<endl;
                 if ((find_str.size()>=10)||((find_str.size()>0)&&isdigit(find_str[0]))){
                     run=false;
                     cout << "Error: invalid input" <<endl;
@@ -596,7 +641,7 @@ int main (int argc, char *argv[])
                 }
                 
             }
-            //cout << assignment<<"im codeames" <<endl;
+            cout << assignment<<"im codeames" <<endl;
             
            
             std::string find_str2="--";
@@ -671,38 +716,64 @@ int main (int argc, char *argv[])
                 vector<char> fstr;
                 int valtru = inorder(root);
                 
-                //inorder2(root);
-                //inorder3(root);
+                inorder2(root);
+                inorder3(root);
                 vector<vector<int>> outputres = namenodes(root);
+                map<int,Minisat::Lit> allvars;
+                
                 std::unique_ptr<Minisat::Solver> solver(new Minisat::Solver());
                 Minisat::Lit l1, l2, l3, l4;
 
                 // create 4 positive literals over 4 new variables
-                l1 = Minisat::mkLit(solver->newVar());
+                /*l1 = Minisat::mkLit(solver->newVar());
                 l2 = Minisat::mkLit(solver->newVar());
                 l3 = Minisat::mkLit(solver->newVar());
-                l4 = Minisat::mkLit(solver->newVar());
+                l4 = Minisat::mkLit(solver->newVar());*/
 
                 // create 3 positive literals over 3 new variables
-                
-                //Minisat::vec<Minisat::Lit> vecliterals;
+                for(auto outa:outputres){
+                    for (auto outb:outa){
+                        int aout;
+                        if (outb<0){
+                            aout = (-1)*outb;
+                        }   
+                        else{
+                            aout = outb;
+                        }
+                            
+                        if(!allvars.count(aout)){
+                            allvars[aout]=Minisat::mkLit(solver->newVar());;
+                        }
+                        cout<<"im a "<<outb<<endl;
+                    }
+                    cout<<"im b "<<endl;
+                }
+                Minisat::vec<Minisat::Lit> vecliterals;
                 for(vector<int> vr1:outputres){
                     
-                    //vecliterals.clear();
-                    Minisat::vec<Minisat::Lit> vecliterals;
+                    vecliterals.clear();
+                    //Minisat::vec<Minisat::Lit> vecliterals;
                     //cout<<vecliterals.size()<<endl;
+                    int count=0;
                   for(int vr2:vr1){
                     //cout<<"im num "<<vr2<<endl;
+                    count+=1;
                     if (vr2>0){
-                        vecliterals.push(Minisat::toLit(vr2));
+                        //Minisat::Lit t2 = Minisat::toLit(vr2);
+                        
+                        vecliterals.push(allvars[vr2]);
+                        
+                        //cout<<Minisat::toInt(t2)<<"i am int"<<endl;
                     }
                     else{
                         int tmp5 = 0-vr2;
-                        Minisat::Lit t1 = Minisat::toLit(vr2);
-                        vecliterals.push(t1);
+                        //Minisat::Lit t1 = Minisat::toLit(vr2);
                         //vecliterals.push(t1);
+                        vecliterals.push(~allvars[tmp5]);
+                        //cout<<Minisat::toInt(t1)<<"i am int"<<endl;
                     }
                   }
+                  cout<<count<<"im count "<<endl;
                   solver->addClause(vecliterals);
                 }
                 
