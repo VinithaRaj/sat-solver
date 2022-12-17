@@ -1,0 +1,23 @@
+sat
+Error: invalid input
+sat
+am i here 13**1
+am i here 5
+unsat
+Error: invalid input
+am i here 13*((
+am i here 
+am i here 13*((
+am i here 
+unsat
+am i here negdig5
+am i here 4r
+am i here 13*1-
+am i here 3*1-
+am i here 3*1-
+am i here 3*1-
+am i here 45*1-
+unsat
+unsat
+unsat
+sat
