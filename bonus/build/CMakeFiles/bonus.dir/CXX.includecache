@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/vr3rajag/tutorial/vr3rajag/bonus/main.cc
+iostream
+-
+string
+-
+map
+-
+string.h
+-
+vector
+-
+algorithm
+-
+cctype
+-
+typeinfo
+-
+queue
+-
+

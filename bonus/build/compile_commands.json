@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/vr3rajag/tutorial/vr3rajag/bonus/build",
+  "command": "/usr/bin/c++    -std=c++11 -Wall    -o CMakeFiles/bonus.dir/main.cc.o -c /home/vr3rajag/tutorial/vr3rajag/bonus/main.cc",
+  "file": "/home/vr3rajag/tutorial/vr3rajag/bonus/main.cc"
+}
+]
