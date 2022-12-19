@@ -106,94 +106,82 @@ int inorder(Node* root)
 }
 tuple<vector<vector<int>>,map<int,bool>,int> bcp(vector<vector<int>> in,map<int,bool> a,int setfalse){
     vector<vector<int>> out;
-    //int setfalse=0;
     bool stillcan=false;
     bool modified=false;
-    for (auto & element : in) 
-  {
-    if(element.size()==1)
-    {
-        //cout << element[0]<<"im bcp" <<endl;
-        int pq=element[0];
-        modified=true;
-        int pqneg=element[0]*(-1);
-        if(pq>0){
-        	if(!a.count(pq)){
-            	a[pq]=true;
-            }	
-        }
-        else{
-        	if(!a.count(pqneg)){
-            	a[pqneg]=false;
-            }	
-        }
-        //cout<<pq<<" im pq"<<endl;
-        for(auto elemout: in){
-            if (count(elemout.begin(),elemout.end(),pqneg)>0){
-                vector<int> tmpvec;
-                for (auto num:elemout){
-                    if((num!=pqneg)&&(elemout.size()>1)){
-                        tmpvec.push_back(num);
+    for (auto & element : in) {
+        if(element.size()==1){
+            //cout << element[0]<<"REMOVEDDD" <<endl;
+            int pq=element[0]; //value of list with size 1
+            modified=true;
+            int pqneg=element[0]*(-1);
+            if(pq>0){ //store the mod value in dict a
+                if(!a.count(pq)){
+                    a[pq]=true;
+                }	
+            }
+            else{
+                if(!a.count(pqneg)){
+                    a[pqneg]=false;
+                }	
+            }
+            for(auto elemout: in){
+                if (count(elemout.begin(),elemout.end(),pqneg)>0){
+                    vector<int> tmpvec;
+                    for (auto num:elemout){
+                        if((num!=pqneg)&&(elemout.size()>1)){
+                            tmpvec.push_back(num);
+                        }   
                     }
-                    
+                    if((elemout[0]==pqneg)&&(elemout.size()==1)){
+                            setfalse=-1;
+                            break;
+                    }   
+                    out.push_back(tmpvec);
                 }
-                if((elemout[0]==pqneg)&&(elemout.size()==1)){
-                    //cout<<"am i here now"<<endl;
-                        setfalse=-1;
-                        break;
-                    }
-                
-                out.push_back(tmpvec);
+                else if(count(elemout.begin(),elemout.end(),pq)==0){
+                    out.push_back(elemout);
+                } 
             }
-            else if(count(elemout.begin(),elemout.end(),pq)==0){
-                out.push_back(elemout);
-                //cout<<pq<<" i pq"<<endl;
-            }
-            
+            break;
         }
-        //cout<<a[2]<<"gree"<<endl;
-        break;
     }
-  }
   
-  for (auto & element2 : out) 
-  {
-      if (element2.size()==1){
-          stillcan=true;
-      }
-  }
-  if ((stillcan==true)&&(setfalse!=-1)&&(setfalse!=1)){
-      return bcp(out,a,setfalse);
-  }
-  else if((out.size()==0)&&(modified==true)&&(setfalse==-1)){
-      //cout<<"wgat ogic"<<endl;
-  	return make_tuple(out,a,-1);
-  }
-  else if((out.size()==0)&&(modified==true)){
-      //cout<<"wgat ogic"<<endl;
-  	return make_tuple(out,a,1);
-  }
-  else if((out.size()==0)&&(modified==false)){
-      //cout<<"wgat ogic"<<endl;
-  	return make_tuple(in,a,0);
-  }
-  else{
-      return make_tuple(out,a,setfalse);
-  }
+    for (auto & element2 : out) 
+    {
+        if (element2.size()==1){
+            stillcan=true;
+        }
+    }
+    if ((stillcan==true)&&(setfalse!=-1)&&(setfalse!=1)){
+        return bcp(out,a,setfalse);
+    }
+    else if((out.size()==0)&&(modified==true)&&(setfalse==-1)){
+        //cout<<"wgat ogic"<<endl;
+        return make_tuple(out,a,-1);
+    }
+    else if((out.size()==0)&&(modified==true)){
+        //cout<<"wgat ogic"<<endl;
+        return make_tuple(out,a,1);
+    }
+    else if((out.size()==0)&&(modified==false)){
+        //cout<<"wgat ogic"<<endl;
+        return make_tuple(in,a,0);
+    }
+    else{
+        return make_tuple(out,a,setfalse);
+    }
 }
 bool dpll(vector<vector<int>> cnf, map<int,bool> amap){
-    cout<<"loopin?"<<endl;
 	vector<vector<int>> checkbcp;
     int setval;
   	tie(checkbcp,amap,setval)=bcp(cnf,amap,setval);
-    //cout<<"im here?"<<setval<<endl;
+    //cout<<"im here?"<<checkbcp.size()<<" "<<setval<<endl;
     if (setval==1){
     	return true;
     }
     else if (setval==-1){
     	return false;
     }
-    //cout<<"im here?"<<endl;
     map<int,int>checkvar;
     for(auto xvec:checkbcp){
         for(auto yvec:xvec){
@@ -205,20 +193,19 @@ bool dpll(vector<vector<int>> cnf, map<int,bool> amap){
                 mapcheck=(-1)*yvec;
             }
             if ((mapcheck!=0)&&(!checkvar.count(mapcheck))){
-                checkvar[mapcheck]=1;
+                checkvar[mapcheck]=1; //make map of variables
             }
         }
     }
     int pchoice;
     for (const auto&emap:checkvar){
         pchoice = emap.first;
-        //cout<<"im pchoice?"<<pchoice<<endl;
+        //cout<<"im pchoice?"<<pchoice<<" "<<checkvar.size()<<endl;
         int pchoiceneg = (-1)*pchoice;
-        //make pchoice true
         amap[pchoice]=true;
         vector<vector<int>> dpout;
         for (auto eachvec:checkbcp){
-    	    if (count(eachvec.begin(),eachvec.end(),pchoiceneg)>0){
+            if (count(eachvec.begin(),eachvec.end(),pchoiceneg)>0){
                 vector<int> tmpvec;
                 for (auto num:eachvec){
                     if((num!=pchoiceneg)&&(eachvec.size()>1)){
@@ -227,20 +214,17 @@ bool dpll(vector<vector<int>> cnf, map<int,bool> amap){
                 }
                 if((eachvec[0]==pchoiceneg)&&(eachvec.size()==1)){
                         return false;
-                    }
-                
+                }
                 dpout.push_back(tmpvec);
-            }
-            else if(count(eachvec.begin(),eachvec.end(),pchoice)==0){
-                dpout.push_back(eachvec);
             }
             else if ((eachvec[0]==pchoice)&&(eachvec.size()==1)&&(checkbcp.size()==1)){
                 return true;
             } 
+            else if(count(eachvec.begin(),eachvec.end(),pchoice)==0){
+                dpout.push_back(eachvec);
+            }
         }
         bool dppos = dpll(dpout, amap);
-        //cout<<dppos<<" im dppos "<<pchoice<<endl;
-        //make pchoice false
         vector<vector<int>> dpout2;
         amap[pchoice]=false;
         for (auto eachvec:cnf){
@@ -253,25 +237,25 @@ bool dpll(vector<vector<int>> cnf, map<int,bool> amap){
                 }
                 if((eachvec[0]==pchoice)&&(eachvec.size()==1)){
                         return false;
-                    }
+                }
                 dpout2.push_back(tmpvec);
             }
-            else if(count(eachvec.begin(),eachvec.end(),pchoiceneg)==0){
-                dpout2.push_back(eachvec);
-            }
+            
             else if ((eachvec[0]==pchoiceneg)&&(eachvec.size()==1)&&(checkbcp.size()==1)){
                 return true;
             } 
+            else if(count(eachvec.begin(),eachvec.end(),pchoiceneg)==0){
+                dpout2.push_back(eachvec);
+            }
         }
-        bool dpneg = dpll(dpout2, amap);
-        //cout<<dpneg<<" im resss "<<dppos<<" "<<pchoice<<endl;
-        if(dpneg||dppos){
+        if(dppos){
             return true;
         }
-        //cout<<"i shouldnt"<<endl;
+        else{
+            return dpll(dpout2, amap);
+        }
     }
-    //cout<<"i shouldnt 2"<<endl;
-    return false;
+    //return false;
 }
 vector<vector<int>> namenodes(Node* root){
     map<char, int> namedcodes;
@@ -969,11 +953,14 @@ int main (int argc, char *argv[])
                 
                 //inorder2(root);
                 inorder3(root);
-                cout<<"am i here"<<endl;
+                //cout<<"am i here"<<endl;
                 vector<vector<int>> outputres = namenodes(root);
                 map<int,bool> assmap;
                 vector<vector<int>> check=outputres;
                 vector<vector<int>> checkbcp;
+                int cccount=0;
+                
+                //break;
                 bool res = dpll(check,assmap);
                 /*map<int,Minisat::Lit> allvars;
                 
@@ -987,24 +974,8 @@ int main (int argc, char *argv[])
                 l4 = Minisat::mkLit(solver->newVar());*/
 
                 // create 3 positive literals over 3 new variables
-                /*for(auto outa:outputres){
-                    for (auto outb:outa){
-                        int aout;
-                        if (outb<0){
-                            aout = (-1)*outb;
-                        }   
-                        else{
-                            aout = outb;
-                        }
-                            
-                        if(!allvars.count(aout)){
-                            allvars[aout]=Minisat::mkLit(solver->newVar());;
-                        }
-                        //cout<<"im a "<<outb<<endl;
-                    }
-                    //cout<<"im b "<<endl;
-                }
-                Minisat::vec<Minisat::Lit> vecliterals;
+                
+                /*Minisat::vec<Minisat::Lit> vecliterals;
                 for(vector<int> vr1:outputres){
                     
                     vecliterals.clear();
@@ -1035,6 +1006,7 @@ int main (int argc, char *argv[])
                 
 
                 /*bool res = solver->solve();*/
+                
                 if (res==1){
                     std::cout << "sat" << "\n";
                 }
