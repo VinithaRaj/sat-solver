@@ -11,25 +11,38 @@
 #include <cctype>
 #include <typeinfo>
 #include <queue>
-//#include <memory>
+#include <memory>
 // defines Var and Lit
-//#include "minisat/core/SolverTypes.h"
+#include "minisat/core/SolverTypes.h"
 // defines Solver
-//#include "minisat/core/Solver.h"
+#include "minisat/core/Solver.h"
 
 using namespace std;
 
 struct Node
 {
-    char data;
+    //char data;
+    string data;
     int i;
     int code=-1;
     Node* left = nullptr, *right = nullptr;
     Node() {};
-    Node(char data, int i): data(data),i(i) {};
+    //Node(char data, int i): data(data),i(i) {};
+    Node(string data, int i): data(data),i(i) {};
 };
-Node* insin(Node* root, vector<char> const &v,bool inbracks);
-Node* insmult(Node* root, vector<char> const &v,bool inbracks);
+//Node* insin(Node* root, vector<char> const &v,bool inbracks);
+//Node* insmult(Node* root, vector<char> const &v,bool inbracks);
+Node* insin(Node* root, vector<string> const &v,bool inbracks);
+Node* insmult(Node* root, vector<string> const &v,bool inbracks);
+inline bool isInteger(const std::string & s)
+{
+   if(s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) return false;
+
+   char * p;
+   strtol(s.c_str(), &p, 10);
+
+   return (*p == 0);
+}
 Node* CreateNode(char data)
 {
 	Node* newNode = new Node();
@@ -61,7 +74,7 @@ void inorder3(Node* root){
     //cout<<root->data<<endl;
     
 }
-int inorder(Node* root)
+/*int inorder(Node* root)
 {
     bool result;
     bool val1;
@@ -103,7 +116,7 @@ int inorder(Node* root)
     }
     //return sq;
     
-}
+}*/
 tuple<vector<vector<int>>,map<int,bool>,int> bcp(vector<vector<int>> in,map<int,bool> a,int setfalse){
     vector<vector<int>> out;
     bool stillcan=false;
@@ -258,7 +271,7 @@ bool dpll(vector<vector<int>> cnf, map<int,bool> amap){
     //return false;
 }
 vector<vector<int>> namenodes(Node* root){
-    map<char, int> namedcodes;
+    map<string, int> namedcodes;
     queue<Node*> q;
     q.push(root);
     int counter=1;
@@ -266,12 +279,12 @@ vector<vector<int>> namenodes(Node* root){
         Node* curnode;
         curnode = q.front();
         q.pop();
-        if ((isdigit(curnode->data)&&!namedcodes.count(curnode->data)&&(curnode->code==-1))){
+        if ((isInteger(curnode->data)&&!namedcodes.count(curnode->data)&&(curnode->code==-1))){
             curnode->code=counter;
             namedcodes[curnode->data] = counter;
             counter+=1;
         }
-        else if((curnode->data=='+')||(curnode->data=='*')||(curnode->data=='-')){
+        else if((curnode->data=="+")||(curnode->data=="*")||(curnode->data=="-")){
             curnode->code=counter;
             //namedcodes[curnode->data] = counter;
             counter+=1;
@@ -296,19 +309,19 @@ vector<vector<int>> namenodes(Node* root){
         curnode2 = q2.front();
         vector<vector<int>> vres;
         q2.pop();
-        if ((curnode2->data=='+')){
+        if ((curnode2->data=="+")){
             //curnode->code=counter;
             vresfinal.push_back({curnode2->code*(-1), curnode2->left->code,curnode2->right->code});
             vresfinal.push_back({curnode2->left->code*(-1), curnode2->code});
             vresfinal.push_back({curnode2->right->code*(-1), curnode2->code});
         }
-        else if ((curnode2->data=='*')){
+        else if ((curnode2->data=="*")){
             //curnode->code=counter;
             vresfinal.push_back({curnode2->code*(-1), curnode2->left->code});
             vresfinal.push_back({curnode2->code*(-1), curnode2->right->code});
             vresfinal.push_back({curnode2->left->code*(-1), curnode2->right->code*(-1),curnode2->code});
         }
-        else if ((curnode2->data=='-')){
+        else if ((curnode2->data=="-")){
             //curnode->code=counter;
             vresfinal.push_back({curnode2->code*(-1), curnode2->left->code*(-1)});
             vresfinal.push_back({curnode2->code, curnode2->left->code});   
@@ -324,92 +337,84 @@ vector<vector<int>> namenodes(Node* root){
     vresfinal.push_back({1});
     return vresfinal;
 }
-Node* insmult(Node* root, vector<char> const &v,bool inbracks){
+//Node* insmult(Node* root, vector<char> const &v,bool inbracks){
+Node* insmult(Node* root, vector<string> const &v,bool inbracks){
     Node* cent;
-    if (v[v.size()-1]==')'){
-        //cout<<"i am me here"<<endl;
+    //cout<<"hereeee"<<endl;
+    if (v[v.size()-1]==")"){
         int b2count=0;
         int bind=v.size()-1;
         bool found=false;
         while(bind>0){
-            if(v[bind]=='('){
+            if(v[bind]=="("){
                 b2count-=1;
             }
-            else if(v[bind]==')'){
+            else if(v[bind]==")"){
                 b2count+=1;
             }
-            if((b2count==0)&&(v[bind]=='*')){
+            if((b2count==0)&&(v[bind]=="*")){
                 found=true;
                 break;
             }
-            bind-=1;
+            bind-=1;//bind points to index of * or index 0
         }
         if (found==false){
-            if (v[0]=='-'){
-                //cout<<"i am me"<<endl;
+            if (v[0]=="-"){
                 auto first = v.cbegin() + 2;
                 auto last = v.cbegin()+v.size()-1;
-                vector<char> v2(first,last);
-                //cout<<v2.size()<<v2[0]<<v2[v2.size()-1]<<endl;
+                //vector<char> v2(first,last);
+                vector<string> v2(first,last);
                 cent = new Node(v[0],0);
                 cent->left=insin(root,v2,true);
             }
             else{
-                //its one unit of bracket
-                //cout<<"i am me"<<endl;
                 auto first = v.cbegin() + 1;
                 auto last = v.cbegin()+v.size()-1;
-                vector<char> v2(first,last);
-                //cout<<v2.size()<<v2[0]<<v2[v2.size()-1]<<endl;
+                //vector<char> v2(first,last);
+                vector<string> v2(first,last);
                 cent = insin(root,v2,true); 
             }
         }
         else{
-            if(v[bind+1]=='-'){
+            if(v[bind+1]=="-"){
                 cent = new Node(v[bind],0);
                 cent->right =new  Node(v[bind+1],0);
                 auto first = v.cbegin() + bind+2;
                 auto last = v.cbegin()+v.size();
-                vector<char> v2(first,last);
-                //cout<<v2[0]<<v2[v2.size()-1]<<v2.size()<<"hi"<<endl;
+                //vector<char> v2(first,last);
+                vector<string> v2(first,last);
                 cent->right->left = insin(root,v2,true);
-                //cout<<"have i returned"<<cent->right->left->data<<endl;
             }
             else{
                 cent =new  Node(v[bind],0);
                 auto first = v.cbegin() + bind+2;
                 auto last = v.cbegin()+v.size()-1;
-                vector<char> v2(first,last);
-                //cout<<"i am in insmult "<<bind<<v[bind]<<v2[0]<<v2[v2.size()-1]<<endl;
+                //vector<char> v2(first,last);
+                vector<string> v2(first,last);
                 cent->right = insin(root,v2,true); 
-                //cout<<"im right "<<cent->right->data<<endl;
             }
+            
             if(bind>2){
                 auto first = v.cbegin();
                 auto last = v.cbegin()+bind;
-                vector<char> v2(first,last);
+                //vector<char> v2(first,last);
+                vector<string> v2(first,last);
                 cent->left = insmult(root,v2,inbracks);
             }
             else{
-                if (bind==2){
-                    //cout<<"am i here 3"<<cent->data<<v[1]<<v[0]<<endl;
-                    cent->left = new Node(v[0],0);
-                    //cout<<"am i here 3"<<cent->data<<v[1]<<v[0]<<endl;
-                    
+                if (v[0]=="-"){
+                    cent->left = new Node(v[0],0);                    
                     cent->left->left = new Node(v[1],0);
-                    //cout<<"am i here 3"<<cent->data<<v[1]<<v[0]<<endl;
                 }
                 else{
-                    //cout<<"am i here now?"<<endl;
                     cent->left =new  Node(v[0],0);
-                }
-                
+                }    
             }
         }
     }
-    else if (isdigit(v[v.size()-1])){
+    else if (isInteger(v[v.size()-1])){
         int bind;
-        if (v[v.size()-2]=='-'){
+        if (v[v.size()-2]=="-"){
             bind =-3;
             cent =new  Node(v[v.size()-3],0);
             cent->right =new  Node(v[v.size()-2],0);
@@ -426,7 +431,8 @@ Node* insmult(Node* root, vector<char> const &v,bool inbracks){
             //cout<<"am i here "<<endl;
             auto first = v.cbegin();
             auto last = v.cbegin()+v.size()+bind;
-            vector<char> v2(first,last);
+            //vector<char> v2(first,last);
+            vector<string> v2(first,last);
             //cout<<cent->data<<"whai"<<v2.size()<<endl;
             cent->left = insmult(root,v2,inbracks);
         }
@@ -434,8 +440,6 @@ Node* insmult(Node* root, vector<char> const &v,bool inbracks){
             if ((v.size()+bind)==2){
                 //cout<<"am i here 3"<<cent->data<<v[1]<<v[0]<<endl;
                 cent->left = new Node(v[0],0);
-                //cout<<"am i here 3"<<cent->data<<v[1]<<v[0]<<endl;
-                
                 cent->left->left = new Node(v[1],0);
                 //cout<<"am i here 3"<<cent->data<<v[1]<<v[0]<<endl;
                 
@@ -451,28 +455,34 @@ Node* insmult(Node* root, vector<char> const &v,bool inbracks){
     //cout<<"whats my prob"<<endl;
     return cent;
 }
-Node* insin(Node* root, vector<char> const &v,bool inbracks){
+//Node* insin(Node* root, vector<char> const &v,bool inbracks){
+Node* insin(Node* root, vector<string> const &v,bool inbracks){
+    //cout<<"am i here?"<<v[0]<<endl;
     Node* cent;
     if(v.size()>3){
-        if (v[0]=='-'){
-            if (isdigit(v[1])){
-                if (v[2]=='+'){
+        if (v[0]=="-"){
+            //cout<<"here?"<<v.size()<<endl;
+            if (isInteger(v[1])){
+                //cout<<"here?"<<v[1]<<endl;
+                if (v[2]=="+"){
                     cent  = new Node(v[2],0);
                     cent->left = new Node(v[0],0);
                     cent->left->left = new Node(v[1],0);;
                     auto firstq2 = v.cbegin()+3;
                     auto lastq2 = v.cbegin()+v.size();
-                    vector<char> v2q2(firstq2,lastq2);
+                    //vector<char> v2q2(firstq2,lastq2);
+                    vector<string> v2q2(firstq2,lastq2);
                     cent->right = insin(root, v2q2,inbracks);
                 }
-                else if (v[2]=='*'){
+                else if (v[2]=="*"){
                     int negdig=2;
                     int negdigcount=0;
-                    while (!((v[negdig]=='+')&&(negdigcount==0))&&negdig<v.size()){
-                        if (v[negdig]=='('){
+                    while (negdig<v.size()&&!((v[negdig]=="+")&&(negdigcount==0))){
+                        //cout<<"stuckkk"<<endl;
+                        if (v[negdig]=="("){
                             negdigcount+=1;
                         }
-                        else if (v[negdig]==')'){
+                        else if (v[negdig]==")"){
                             negdigcount-=1;
                         }
                         negdig+=1;
@@ -486,27 +496,31 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
                 
                     }
                     else{
+                        //cout<<"am i here 45"<<endl;
                         cent  = new Node(v[negdig],0);
                         auto firstq = v.cbegin();
                         auto lastq = v.cbegin()+negdig;
-                        vector<char> v2q(firstq,lastq);
+                        //vector<char> v2q(firstq,lastq);
+                        vector<string> v2q(firstq,lastq);
                         cent->left = insmult(root, v2q,inbracks);
                         auto firstq2 = v.cbegin()+negdig+1;
                         auto lastq2 = v.cbegin()+v.size();
-                        vector<char> v2q2(firstq2,lastq2);
+                        //vector<char> v2q2(firstq2,lastq2);
+                        vector<string> v2q2(firstq2,lastq2);
                         cent->right = insin(root, v2q2,inbracks);
                     }
                 }
             }
-            else if (v[1]=='('){
+            else if (v[1]=="("){
+                //cout<<"here? now"<<v[1]<<endl;
                 int negind = 2;
                 int negcount=1;
                 bool negfound=false;
                 while ((negcount!=0)&&negind<v.size()){
-                    if (v[negind]=='('){
+                    if (v[negind]=="("){
                         negcount+=1;
                     }
-                    else if (v[negind]==')'){
+                    else if (v[negind]==")"){
                         negcount-=1;
                     }
                     negind+=1;
@@ -516,29 +530,32 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
                     cent  = new Node(v[0],0);
                     auto firstq = v.cbegin()+1;
                     auto lastq = v.cbegin()+negind;
-                    vector<char> v2q(firstq,lastq);
+                    //vector<char> v2q(firstq,lastq);
+                    vector<string> v2q(firstq,lastq);
                     cent->left = insin(root, v2q,inbracks);
                 }
-                else if (v[negind]=='+'){
+                else if (v[negind]=="+"){
                     cent  = new Node(v[negind],0);
                     auto firstq = v.cbegin()+1;
                     auto lastq = v.cbegin()+negind;
-                    vector<char> v2q(firstq,lastq);
+                    //vector<char> v2q(firstq,lastq);
+                    vector<string> v2q(firstq,lastq);
                     cent->left = new Node(v[0],0);
                     cent->left->left = insin(root, v2q,inbracks);
                     auto firstq2 = v.cbegin()+negind+1;
                     auto lastq2 = v.cbegin()+v.size();
-                    vector<char> v2q2(firstq2,lastq2);
+                    //vector<char> v2q2(firstq2,lastq2);
+                    vector<string> v2q2(firstq2,lastq2);
                     cent->right = insin(root, v2q2,inbracks);
                 }
-                else if (v[negind]=='*'){
+                else if (v[negind]=="*"){
                     negcount=0;
                     bool negfound=false;
-                    while (!((v[negind]=='+')&&(negcount==0))&&negind<v.size()){
-                        if (v[negind]=='('){
+                    while ((negind<v.size())&&!((v[negind]=="+")&&(negcount==0))){
+                        if (v[negind]=="("){
                             negcount+=1;
                         }
-                        else if (v[negind]==')'){
+                        else if (v[negind]==")"){
                             negcount-=1;
                         }
                         negind+=1;
@@ -550,11 +567,13 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
                         cent  = new Node(v[negind],0);
                         auto firstq = v.cbegin()+1;
                         auto lastq = v.cbegin()+negind;
-                        vector<char> v2q(firstq,lastq);
+                        //vector<char> v2q(firstq,lastq);
+                        vector<string> v2q(firstq,lastq);
                         cent->left = insmult(root, v2q,inbracks);
                         auto firstq2 = v.cbegin()+negind+1;
                         auto lastq2 = v.cbegin()+v.size();
-                        vector<char> v2q2(firstq2,lastq2);
+                        //vector<char> v2q2(firstq2,lastq2);
+                        vector<string> v2q2(firstq2,lastq2);
                         cent->right = insin(root, v2q2,inbracks);
                     }
                     
@@ -563,14 +582,15 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
             }
             
         }
-        else if(v[0]=='('){
+        else if(v[0]=="("){
+            //cout<<"here? nowwwww"<<endl;
             int bind = 1;
             int b2count=1;
             while(bind<v.size()-1){
-                if(v[bind]=='('){
+                if(v[bind]=="("){
                     b2count+=1;
                 }
-                else if(v[bind]==')'){
+                else if(v[bind]==")"){
                     b2count-=1;
                 }
                 if(b2count==0){
@@ -582,34 +602,37 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
                 //cout<<"dafrick"<<endl;
                 auto first = v.cbegin() + 1;
                 auto last = v.cbegin()+bind;
-                vector<char> v2(first,last);
+                //vector<char> v2(first,last);
+                vector<string> v2(first,last);
                 cent = insin(root,v2,inbracks);
             }
-            else if(v[bind+1]=='+'){
+            else if((bind+1)<v.size()&&(v[bind+1]=="+")){
                 //cout<<"moi"<<endl;
                 cent = new Node(v[bind+1],0);
                 auto first = v.cbegin() + 1;
                 auto last = v.cbegin()+bind;
-                vector<char> v2(first,last);
+                //vector<char> v2(first,last);
+                vector<string> v2(first,last);
                 cent->left = insin(root,v2,true);
                 auto first2 = v.cbegin() + bind+2;
                 auto last2= v.cbegin()+v.size();
-                vector<char> v3(first2,last2);
+                //vector<char> v3(first2,last2);
+                vector<string> v3(first2,last2);
                 cent->right = insin(root,v3,inbracks);
             }
-            else if(v[bind+1]=='*'){
+            else if((bind+1)<v.size()&&(v[bind+1]=="*")){
                 //cout<<"great"<<endl;
                 bool found=false;
                 int brcount=0;
                 int brind=bind+1;
                 while(brind<v.size()){
-                    if(v[brind]=='('){
+                    if(v[brind]=="("){
                         brcount+=1;
                     }
-                    else if(v[brind]==')'){
+                    else if(v[brind]==")"){
                         brcount-=1;
                     }
-                    if((brcount==0)&&(v[brind]=='+')){
+                    if((brcount==0)&&(v[brind]=="+")){
                         found=true;
                         break;
                     }
@@ -620,12 +643,14 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
                     cent = new Node(v[brind],0);
                     auto first = v.cbegin();
                     auto last = v.cbegin()+brind;
-                    vector<char> v2(first,last);
+                    //vector<char> v2(first,last);
+                    vector<string> v2(first,last);
                     //cout<<v2.size()<<endl;
                     cent->left = insmult(root,v2,inbracks);
                     auto first2 = v.cbegin() + brind+1;
                     auto last2 = v.cbegin()+v.size();
-                    vector<char> v3(first2,last2);
+                    //vector<char> v3(first2,last2);
+                    vector<string> v3(first2,last2);
                     //cout<<v3.size()<<v2.size()<<v2[0]<<v3[0]<<endl;
                     cent->right = insin(root,v3,inbracks);
                 }
@@ -636,20 +661,21 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
             }
             
         }
-        else if(isdigit(v[0])){
+        else if(isInteger(v[0])){
+            //cout<<"inge?"<<v[1]<<endl;
             int sind=2;
-            if(v[1]=='*'){
+            if(v[1]=="*"){
                 bool found=false;
                 int brcount=0;
                 int brind=1;
                 while(brind<v.size()-1){
-                    if(v[brind]=='('){
+                    if(v[brind]=="("){
                         brcount+=1;
                     }
-                    else if(v[brind]==')'){
+                    else if(v[brind]==")"){
                         brcount-=1;
                     }
-                    if((brcount==0)&&(v[brind]=='+')){
+                    if((brcount==0)&&(v[brind]=="+")){
                         found=true;
                         //cout << "im brind 2"<<brind << endl;
                         break;
@@ -661,11 +687,13 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
                     cent = new Node(v[brind],0);
                     auto first = v.cbegin();
                     auto last = v.cbegin()+brind;
-                    vector<char> v2(first,last);
+                    //vector<char> v2(first,last);
+                    vector<string> v2(first,last);
                     cent->left = insmult(root,v2,true);
                     auto first2 = v.cbegin() + brind+1;
                     auto last2 = v.cbegin()+v.size();
-                    vector<char> v3(first2,last2);
+                    //vector<char> v3(first2,last2);
+                    vector<string> v3(first2,last2);
                     cent->right = insin(root,v3,inbracks);
                 }
                 else{
@@ -674,7 +702,7 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
                     //cout<<"do i reach"<<endl;
                 }
             }
-            else if(v[1]=='+'){
+            else if(v[1]=="+"){
                 cent = new Node(v[1],0);
                 cent->left = new Node(v[0],0);
                 /*if ((root==nullptr)&&(inbracks==false)){
@@ -682,58 +710,66 @@ Node* insin(Node* root, vector<char> const &v,bool inbracks){
                 }*/
                 auto first2 = v.cbegin() + 2;
                 auto last2 = v.cbegin()+v.size();
-                vector<char> v3(first2,last2);
+                //vector<char> v3(first2,last2);
+                vector<string> v3(first2,last2);
                 cent->right = insin(root,v3,inbracks);
             }
         }
-        else if(v[0]=='+'){
+        else if(v[0]=="+"){
+            //cout<<"here ippo?"<<v[1]<<endl;
             cent = new Node(v[0],0);
             if (root==nullptr){
                 root = cent;
             }
             auto first = v.cbegin() + 1;
             auto last = v.cbegin()+v.size();
-            vector<char> v3(first,last);
+            //vector<char> v3(first,last);
+            vector<string> v3(first,last);
             cent->right = insin(root,v3,inbracks);
         }
     }
     else{
-        if(((v[0]=='+')||(v[0]=='*'))&&isdigit(v[1])){
+        //cout<<"i get here now gahhhh"<<v[0]<<endl;
+        if (v.size()==1){
+            //cout<<"i get here"<<endl;
+            cent = new Node(v[0],0);
+        }
+        else if((v.size()>1)&&((v[0]=="+")||(v[0]=="*"))&&isInteger(v[1])){
+            //cout<<v[0]<<v[1]<<"am i here atleast"<<endl;
             cent = new Node(v[0],0);
             cent->right = new Node(v[1],1);
         }
-        else if (((v[0]=='+')||(v[0]=='*'))&&(v[1])=='-'){
+        else if ((v.size()>2)&&((v[0]=="+")||(v[0]=="*"))&&(v[1]=="-")){
+            //cout<<v[0]<<v[1]<<"am i here kor"<<endl;
             cent = new Node(v[0],0);
             cent->right = new Node(v[1],1);
             cent->right->left = new Node(v[2],2);
         }
-        else if ((v[1]=='+')||(v[1]=='*')){
-            //cout<<v[0]<<v[2]<<"am i here"<<endl;
+        else if ((v.size()>2)&&((v[1]=="+")||(v[1]=="*"))){
+            //cout<<v[0]<<v[1]<<"am i here"<<endl;
             cent = new Node(v[1],0);
             cent->right = new Node(v[2],1);
             cent->left = new Node(v[0],2);
         }
-        else if (v[0]=='('){
-            //cout<<"i get here"<<endl;
+        else if (v[0]=="("){
+            //cout<<"i get here 2"<<endl;
             cent = new Node(v[1],0);
         }
-        else if (v.size()==1){
-            //cout<<"i get here"<<endl;
-            cent = new Node(v[0],0);
-        }
-        else if ((v.size()==2)&&(v[0]=='-')){
+        
+        else if ((v.size()==2)&&(v[0]=="-")){
             //cout<<"i get here"<<endl;
             cent = new Node(v[0],0);
             cent->left = new Node(v[1],1);
         }
+        
         if ((root==nullptr)&&(inbracks==false)){
             root = cent;
-        }
-        
+        } 
     }
     return cent;
 }
-Node* constructBST(vector<char> const &keys)
+//Node* constructBST(vector<char> const &keys)
+Node* constructBST(vector<string> const &keys)
 {
     Node* root = nullptr;
     root = insin(root,keys,false);
@@ -887,7 +923,30 @@ int main (int argc, char *argv[])
             //Assgning to vector
             assignment.erase(std::remove_if(assignment.begin(), assignment.end(), ::isspace),
                     assignment.end());
-            vector<char> vfinal(assignment.begin(), assignment.end());
+            //cout<<assignment<<"im assignment "<<isdigit(assignment[0])<<endl;
+            //vector<char> vfinal(assignment.begin(),assignment.end());
+            vector<string> vfinal;
+            int i=0;
+            string tmpsub;
+            while (i<assignment.size()){
+                if (!isdigit(assignment[i])){
+                    tmpsub=assignment[i];
+                    vfinal.push_back(tmpsub);
+                    i+=1;
+                    //cout<<"me str "<<vfinal[vfinal.size()-1]<<endl;
+                }
+                else if(isdigit(assignment[i])){
+                    tmpsub="";
+                    while(isdigit(assignment[i])&&i<assignment.size()){
+                        //cout<<"me "<<endl;
+                        tmpsub+=assignment[i];
+                        i+=1;
+                    }
+                    vfinal.push_back(tmpsub);
+                    //cout<<"me str "<<vfinal[vfinal.size()-1]<<endl;
+                } 
+            }
+            //cout<<"me str size"<<vfinal.size()<<" "<<vfinal.max_size()<<endl;
             if (run){
                 bool check;
                 for (int i = 0; i < assignment.size(); ++i) {
@@ -902,6 +961,7 @@ int main (int argc, char *argv[])
                     }
                     else{
                         run=false;
+                        //cout<<"here 1"<<endl;
                         cout << "Error: invalid input" <<endl;
                         break;
                     }
@@ -909,33 +969,38 @@ int main (int argc, char *argv[])
                 }
                 
                 int brackcounter=0;
-                int i=0;
+                int i=1;
                 while ((i<vfinal.size())&&run){
-                    if(((vfinal[i]=='+' || vfinal[i]=='*')&&(vfinal[i-1]=='+' || vfinal[i-1]=='*'))||(vfinal[vfinal.size()-1]=='-')||(vfinal[vfinal.size()-1]=='+')||(vfinal[vfinal.size()-1]=='*')){
+                    if(((vfinal[i]=="+" || vfinal[i]=="*")&&(vfinal[i-1]=="+" || vfinal[i-1]=="*"))||(vfinal[vfinal.size()-1]=="-")||(vfinal[vfinal.size()-1]=="+")||(vfinal[vfinal.size()-1]=="*")){
+                        //cout<<"here 2"<<vfinal[i]<<vfinal[i-1]<<vfinal[vfinal.size()-1]<<endl;
                         cout << "Error: invalid input" <<endl;
                         run = false;
                     }
-                    else if((vfinal[i]=='(')&&isdigit(vfinal[i-1])||(vfinal[i-1]==')')&&isdigit(vfinal[i])){
+                    else if((vfinal[i]=="(")&&isInteger(vfinal[i-1])||(vfinal[i-1]==")")&&isInteger(vfinal[i])){
+                        //cout<<"here 3"<<endl;
                         cout << "Error: invalid input" <<endl;
                         run = false;
                     }
-                    else if(((vfinal[i-1]=='(')&&((vfinal[i]=='*')||(vfinal[i]=='+'))) || ((vfinal[i]==')')&&((vfinal[i-1]=='+')||(vfinal[i-1]=='*')))){
+                    else if(((vfinal[i-1]=="(")&&((vfinal[i]=="*")||(vfinal[i]=="+"))) || ((vfinal[i]==")")&&((vfinal[i-1]=="+")||(vfinal[i-1]=="*")))){
                         //std::cout<<"here 5"<<'\n';
                         cout << "Error: invalid input" <<endl;
                         run = false;
                     }
-                    else if(isdigit(vfinal[i-1])&&isdigit(vfinal[i])){
+                    else if(isInteger(vfinal[i-1])&&isInteger(vfinal[i])){
                         //std::cout<<"here 6"<<'\n';
                         cout << "Error: invalid input" <<endl;
                         run = false;
                     }
-                    if(vfinal[i]=='('){
+                    if(vfinal[i]=="("){
                         brackcounter+=1;
                     }
-                    else if(vfinal[i]==')'){
+                    else if(vfinal[i]==")"){
                         brackcounter-=1;
                     }
                     i++;
+                }
+                if(vfinal[0]=="("){
+                    brackcounter+=1;
                 }
                 if (brackcounter!=0){
                     run = false;
@@ -948,8 +1013,6 @@ int main (int argc, char *argv[])
             {
                 
                 Node* root = constructBST(vfinal);
-                vector<char> fstr;
-                int valtru = inorder(root);
                 
                 //inorder2(root);
                 inorder3(root);
@@ -962,59 +1025,14 @@ int main (int argc, char *argv[])
                 
                 //break;
                 bool res = dpll(check,assmap);
-                /*map<int,Minisat::Lit> allvars;
-                
-                std::unique_ptr<Minisat::Solver> solver(new Minisat::Solver());
-                Minisat::Lit l1, l2, l3, l4;
 
-                // create 4 positive literals over 4 new variables
-                /*l1 = Minisat::mkLit(solver->newVar());
-                l2 = Minisat::mkLit(solver->newVar());
-                l3 = Minisat::mkLit(solver->newVar());
-                l4 = Minisat::mkLit(solver->newVar());*/
-
-                // create 3 positive literals over 3 new variables
-                
-                /*Minisat::vec<Minisat::Lit> vecliterals;
-                for(vector<int> vr1:outputres){
-                    
-                    vecliterals.clear();
-                    //Minisat::vec<Minisat::Lit> vecliterals;
-                    //cout<<vecliterals.size()<<endl;
-                    int count=0;
-                  for(int vr2:vr1){
-                    //cout<<"im num "<<vr2<<endl;
-                    count+=1;
-                    if (vr2>0){
-                        //Minisat::Lit t2 = Minisat::toLit(vr2);
-                        
-                        vecliterals.push(allvars[vr2]);
-                        
-                        //cout<<Minisat::toInt(t2)<<"i am int"<<endl;
-                    }
-                    else{
-                        int tmp5 = 0-vr2;
-                        //Minisat::Lit t1 = Minisat::toLit(vr2);
-                        //vecliterals.push(t1);
-                        vecliterals.push(~allvars[tmp5]);
-                        //cout<<Minisat::toInt(t1)<<"i am int"<<endl;
-                    }
-                  }
-                  //cout<<count<<"im count "<<endl;
-                  //solver->addClause(vecliterals);
-                }*/
-                
-
-                /*bool res = solver->solve();*/
-                
                 if (res==1){
                     std::cout << "sat" << "\n";
                 }
                 else{
                     std::cout << "unsat" << "\n";
                 }
-                
-                //solver.reset (new Minisat::Solver());
+
                 
                 //cout <<valtru<<endl;
                 
