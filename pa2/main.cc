@@ -169,7 +169,6 @@ Node* insmult(Node* root, vector<string> const &v,bool inbracks){
                 vector<string> v2(first,last);
                 cent->right = insin(root,v2,true); 
             }
-            
             if(bind>2){
                 auto first = v.cbegin();
                 auto last = v.cbegin()+bind;
@@ -188,8 +187,10 @@ Node* insmult(Node* root, vector<string> const &v,bool inbracks){
         }
     }
     else if (isInteger(v[v.size()-1])){
+        //cout<<v[0]<<v.size()<<endl;
         int bind;
-        if (v[v.size()-2]=="-"){
+        if ((v.size()>2)&&v[v.size()-2]=="-"){
+            //cout<<"do i reach here?"<<endl;
             bind =-3;
             cent =new  Node(v[v.size()-3],0);
             cent->right =new  Node(v[v.size()-2],0);
@@ -311,7 +312,7 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
                     }
                     else{
                         cent  = new Node(v[negind],0);
-                        auto firstq = v.cbegin()+1;
+                        auto firstq = v.cbegin();
                         auto lastq = v.cbegin()+negind;
                         vector<string> v2q(firstq,lastq);
                         cent->left = insmult(root, v2q,inbracks);
@@ -593,8 +594,7 @@ int main (int argc, char *argv[])
                 if(find_str!=""){
                     if ((find_str.size()>=10)||((find_str.size()>0)&&isdigit(find_str[0]))){
                         run=false;
-                        
-                        cout << "Error: invalid input 2" <<endl;
+                        cout << "Error: invalid input" <<endl;
                         break;
                     }
                     else if ((find_str.size()>0)&&(sub_str.size()>0)&&istextinput){
@@ -612,7 +612,7 @@ int main (int argc, char *argv[])
             }
             std::string find_str2="--";
             while((index = assignment.find(find_str2)) != string::npos){ 
-                   assignment.replace(index, find_str2.length(), ""); 
+                assignment.replace(index, find_str2.length(), ""); 
             }
             //Assgning to vector
             assignment.erase(std::remove_if(assignment.begin(), assignment.end(), ::isspace),assignment.end());
@@ -691,7 +691,7 @@ int main (int argc, char *argv[])
             if (run)
             {    
                 Node* root = constructBST(vfinal);
-                inorder3(root);
+                //inorder2(root);
                 vector<vector<int>> outputres = namenodes(root);
                 map<int,Minisat::Lit> allvars;
                 std::unique_ptr<Minisat::Solver> solver(new Minisat::Solver());
