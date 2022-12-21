@@ -1,0 +1,5 @@
+This program first constructs a tree, and uses Tseitin's transform to create a vector of vectors where each of the subvectors are CNF clauses.
+
+Since Tseitin's transform returns an equisatisfiable CNF, and DPLL is used to resolve formulas in CNF, DPLL is used. The DPLL function first calls a Boolean Constraint Propagation, BCP, function to remove variables that occur as unit clauses. If BCP returns a single unit clause, DPLL immediately returns SAT. Else if for a unit clause, p, there also exists a unit clause -p, DPLL returns UNSAT.
+
+In the DPLL function, from the CNF returned from BCP, a variable, q, is chosen in order, and first q is set to True, and DPLL is called on this modified CNF where clause containing q is removed, and -q is removed from clauses containing -q. If the DPLL of this CNF returns False, q is then set to False, and DPLL is called on this CNF. If this call to DPLL also returns false, DPLL returns UNSAT. Else, DPLL returns SAT. 
