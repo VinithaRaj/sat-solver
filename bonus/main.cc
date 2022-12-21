@@ -391,7 +391,7 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
                         }
                         negdig+=1;
                     }
-                    if (negdig==(v.size())){                
+                    if (negdig==(v.size())){
                         cent = insmult(root, v,inbracks);                
                     }
                     else{
@@ -456,7 +456,7 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
                     }
                     else{
                         cent  = new Node(v[negind],0);
-                        auto firstq = v.cbegin()+1;
+                        auto firstq = v.cbegin();
                         auto lastq = v.cbegin()+negind;
                         vector<string> v2q(firstq,lastq);
                         cent->left = insmult(root, v2q,inbracks);
