@@ -530,47 +530,7 @@ vector<string> split (string s, string delimiter) {
     res.push_back (s.substr (pos_start));
     return res;
 }
-vector<vector<int>> bcp(vector<vector<int>> in){
-    vector<vector<int>> out;
-    for (auto & element : in) 
-  {
-    if(element.size()==1)
-    {
-        cout << element[0] << " ";
-        int pq=element[0];
-        int pqneg=element[0]*(-1);
-        
-        for(auto elemout: in){
-            if (count(elemout.begin(),elemout.end(),pqneg)>0){
-                vector<int> tmpvec;
-                for (auto num:elemout){
-                    if(num!=pqneg){
-                        tmpvec.push_back(num);
-                    }
-                }
-                out.push_back(tmpvec);
-            }
-            else if(count(elemout.begin(),elemout.end(),pq)==0){
-                out.push_back(elemout);
-            }
-        }
-        break;
-    }
-  }
-  bool stillcan=false;
-  for (auto & element2 : out) 
-  {
-      if (element2.size()==1){
-          stillcan=true;
-      }
-  }
-  if (stillcan==true){
-      return bcp(out);
-  }
-  else{
-      return out;
-  }
-}
+
 int main (int argc, char *argv[])
 {
     std::string input;
@@ -691,7 +651,7 @@ int main (int argc, char *argv[])
                         cout << "Error: invalid input" <<endl;
                         run = false;
                     }
-                    else if((vfinal[i]=="(")&&isInteger(vfinal[i-1])||(vfinal[i-1]==")")&&isInteger(vfinal[i])){
+                    else if(((vfinal[i]=="-")&&((vfinal[i-1]==")")||isInteger(vfinal[i-1])))||((vfinal[i]==")")&&(vfinal[i-1]=="("))||((vfinal[i]=="(")&&(vfinal[i-1]==")"))||((vfinal[i]=="(")&&isInteger(vfinal[i-1]))||((vfinal[i-1]==")")&&isInteger(vfinal[i]))){
                         cout << "Error: invalid input" <<endl;
                         run = false;
                     }
@@ -715,8 +675,11 @@ int main (int argc, char *argv[])
                     brackcounter+=1;
                 }
                 if (brackcounter!=0){
+                    
+                    if(run){
+                        cout << "Error: invalid input" <<endl;
+                    }
                     run = false;
-                    cout << "Error: invalid input" <<endl;
                 }
             }
             
