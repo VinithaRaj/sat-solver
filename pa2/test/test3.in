@@ -1,0 +1,5 @@
+a*b*c*d
+a*-(b+c+d)+a
+-(b+c)+a*c+(-(d*a+c))
+a*-(b+c+d)*-b+a
+-a*b+c*-d+(a*-(a*(-b+c)))
