@@ -265,6 +265,7 @@ vector<vector<int>> namenodes(Node* root){
     return vresfinal;
 }
 Node* insmult(Node* root, vector<string> const &v,bool inbracks){
+    //changed
     Node* cent;
     if (v[v.size()-1]==")"){
         int b2count=0;
@@ -284,7 +285,9 @@ Node* insmult(Node* root, vector<string> const &v,bool inbracks){
             bind-=1;//bind points to index of * or index 0
         }
         if (found==false){
+            
             if (v[0]=="-"){
+                // means -(a+b+c), bind will be 1
                 auto first = v.cbegin() + 2;
                 auto last = v.cbegin()+v.size()-1;
                 vector<string> v2(first,last);
@@ -292,6 +295,7 @@ Node* insmult(Node* root, vector<string> const &v,bool inbracks){
                 cent->left=insin(root,v2,true);
             }
             else{
+                //means (a+b+c)
                 auto first = v.cbegin() + 1;
                 auto last = v.cbegin()+v.size()-1;
                 vector<string> v2(first,last);
@@ -299,6 +303,7 @@ Node* insmult(Node* root, vector<string> const &v,bool inbracks){
             }
         }
         else{
+            //bind is index of *
             if(v[bind+1]=="-"){
                 cent = new Node(v[bind],0);
                 cent->right =new  Node(v[bind+1],0);
@@ -309,12 +314,11 @@ Node* insmult(Node* root, vector<string> const &v,bool inbracks){
             }
             else{
                 cent =new  Node(v[bind],0);
-                auto first = v.cbegin() + bind+2;
-                auto last = v.cbegin()+v.size()-1;
+                auto first = v.cbegin() + bind+1;
+                auto last = v.cbegin()+v.size();
                 vector<string> v2(first,last);
                 cent->right = insin(root,v2,true); 
             }
-            
             if(bind>2){
                 auto first = v.cbegin();
                 auto last = v.cbegin()+bind;
@@ -334,7 +338,7 @@ Node* insmult(Node* root, vector<string> const &v,bool inbracks){
     }
     else if (isInteger(v[v.size()-1])){
         int bind;
-        if (v[v.size()-2]=="-"){
+        if ((v.size()>2)&&v[v.size()-2]=="-"){
             bind =-3;
             cent =new  Node(v[v.size()-3],0);
             cent->right =new  Node(v[v.size()-2],0);
@@ -352,7 +356,7 @@ Node* insmult(Node* root, vector<string> const &v,bool inbracks){
             cent->left = insmult(root,v2,inbracks);
         }
         else{
-            if ((v.size()+bind)==2){
+            if (((v.size()+bind)==2)&&v[0]=="-"){
                 cent->left = new Node(v[0],0);
                 cent->left->left = new Node(v[1],0);                
             }
@@ -366,11 +370,13 @@ Node* insmult(Node* root, vector<string> const &v,bool inbracks){
     return cent;
 }
 Node* insin(Node* root, vector<string> const &v,bool inbracks){
+    //cout<<v[0]<<"here "<<endl;
     Node* cent;
     if(v.size()>3){
         if (v[0]=="-"){
             if (isInteger(v[1])){
                 if (v[2]=="+"){
+                    //eg. -1+.... checked correct
                     cent  = new Node(v[2],0);
                     cent->left = new Node(v[0],0);
                     cent->left->left = new Node(v[1],0);;
@@ -380,21 +386,28 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
                     cent->right = insin(root, v2q2,inbracks);
                 }
                 else if (v[2]=="*"){
+                    //finds nearest plus thats not within bracks, or reaches end of vector
+                    //checked correcto
                     int negdig=2;
                     int negdigcount=0;
-                    while (negdig<v.size()&&!((v[negdig]=="+")&&(negdigcount==0))){
+                    while ((negdig<v.size())){
                         if (v[negdig]=="("){
                             negdigcount+=1;
                         }
                         else if (v[negdig]==")"){
                             negdigcount-=1;
                         }
+                        if ((v[negdig]=="+")&&(negdigcount==0)){
+                            break;
+                        }
                         negdig+=1;
                     }
                     if (negdig==(v.size())){
+                        //if end of vector reached, no plus, so pass whole vector to insmult
                         cent = insmult(root, v,inbracks);                
                     }
                     else{
+                        //v[negdig] = +
                         cent  = new Node(v[negdig],0);
                         auto firstq = v.cbegin();
                         auto lastq = v.cbegin()+negdig;
@@ -408,6 +421,8 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
                 }
             }
             else if (v[1]=="("){
+                //next could be integer, - or (
+                //eg. -(...
                 int negind = 2;
                 int negcount=1;
                 bool negfound=false;
@@ -420,17 +435,20 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
                     }
                     negind+=1;
                 }
+                //negind points to token after last ) could be + or * or )
                 if (negind==(v.size())){
+                    //last tok of v is )
                     cent  = new Node(v[0],0);
-                    auto firstq = v.cbegin()+1;
-                    auto lastq = v.cbegin()+negind;
+                    auto firstq = v.cbegin()+2;
+                    auto lastq = v.cbegin()+negind-1;
                     vector<string> v2q(firstq,lastq);
                     cent->left = insin(root, v2q,inbracks);
                 }
                 else if (v[negind]=="+"){
                     cent  = new Node(v[negind],0);
-                    auto firstq = v.cbegin()+1;
-                    auto lastq = v.cbegin()+negind;
+                    //index after (, and before )
+                    auto firstq = v.cbegin()+2; 
+                    auto lastq = v.cbegin()+negind-1;
                     vector<string> v2q(firstq,lastq);
                     cent->left = new Node(v[0],0);
                     cent->left->left = insin(root, v2q,inbracks);
@@ -442,19 +460,23 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
                 else if (v[negind]=="*"){
                     negcount=0;
                     bool negfound=false;
-                    while ((negind<v.size())&&!((v[negind]=="+")&&(negcount==0))){
+                    while ((negind<v.size())){
                         if (v[negind]=="("){
                             negcount+=1;
                         }
                         else if (v[negind]==")"){
                             negcount-=1;
                         }
+                        if((v[negind]=="+")&&(negcount==0)){
+                            break;
+                        }
                         negind+=1;
                     }
-                    if (negind==(v.size()-1)){
+                    if (negind==(v.size())){
                         cent = insmult(root, v,inbracks);
                     }
                     else{
+                        //v[negind]=+, neg taken care of by insmult
                         cent  = new Node(v[negind],0);
                         auto firstq = v.cbegin();
                         auto lastq = v.cbegin()+negind;
@@ -471,9 +493,10 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
             
         }
         else if(v[0]=="("){
+            //eg. (1+2)*3
             int bind = 1;
             int b2count=1;
-            while(bind<v.size()-1){
+            while(bind<v.size()){
                 if(v[bind]=="("){
                     b2count+=1;
                 }
@@ -485,13 +508,15 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
                 }
                 bind+=1;
             }
+            //v[bind] points to )
             if (bind==(v.size()-1)){
                 auto first = v.cbegin() + 1;
                 auto last = v.cbegin()+bind;
                 vector<string> v2(first,last);
                 cent = insin(root,v2,inbracks);
             }
-            else if((bind+1)<v.size()&&(v[bind+1]=="+")){
+            else if((bind+1)<(v.size())&&(v[bind+1]=="+")){
+                //eg. (1+2+3)+..., v[bind+1]=+
                 cent = new Node(v[bind+1],0);
                 auto first = v.cbegin() + 1;
                 auto last = v.cbegin()+bind;
@@ -502,7 +527,8 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
                 vector<string> v3(first2,last2);
                 cent->right = insin(root,v3,inbracks);
             }
-            else if((bind+1)<v.size()&&(v[bind+1]=="*")){
+            else if((bind+1)<(v.size()-1)&&(v[bind+1]=="*")){
+                //eg. (1+2+3)*..., v[bind+1]=*
                 bool found=false;
                 int brcount=0;
                 int brind=bind+1;
@@ -520,6 +546,8 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
                     brind+=1;
                 }
                 if(found==true){
+                    //v[brind]=+
+                    //(1+2)*2*3+...
                     cent = new Node(v[brind],0);
                     auto first = v.cbegin();
                     auto last = v.cbegin()+brind;
@@ -531,18 +559,20 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
                     cent->right = insin(root,v3,inbracks);
                 }
                 else{
+                    //brind=v.size()-1
                     cent = insmult(root,v,inbracks);
                 }
             }
             
         }
-        else if(isInteger(v[0])){
+        else if(isInteger(v[0])){    
             int sind=2;
             if(v[1]=="*"){
+                //1*2+3
                 bool found=false;
                 int brcount=0;
                 int brind=1;
-                while(brind<v.size()-1){
+                while(brind<v.size()){
                     if(v[brind]=="("){
                         brcount+=1;
                     }
@@ -556,6 +586,7 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
                     brind+=1;
                 }
                 if(found==true){
+                    //v[brind]=+
                     cent = new Node(v[brind],0);
                     auto first = v.cbegin();
                     auto last = v.cbegin()+brind;
@@ -567,6 +598,7 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
                     cent->right = insin(root,v3,inbracks);
                 }
                 else{
+                    //brind=v.size()-1
                     cent = insmult(root,v,inbracks);
                 }
             }
@@ -608,7 +640,8 @@ Node* insin(Node* root, vector<string> const &v,bool inbracks){
             cent->right = new Node(v[2],1);
             cent->left = new Node(v[0],2);
         }
-        else if (v[0]=="("){
+        else if ((v.size()==3)&&v[0]=="("){
+            //v.size()=3
             cent = new Node(v[1],0);
         }
         
@@ -808,7 +841,7 @@ int main (int argc, char *argv[])
                         cout << "Error: invalid input" <<endl;
                         run = false;
                     }
-                    else if((vfinal[i]=="(")&&isInteger(vfinal[i-1])||(vfinal[i-1]==")")&&isInteger(vfinal[i])){
+                    else if(((vfinal[i]=="-")&&((vfinal[i-1]==")")||isInteger(vfinal[i-1])))||((vfinal[i]==")")&&(vfinal[i-1]=="("))||((vfinal[i]=="(")&&(vfinal[i-1]==")"))||((vfinal[i]=="(")&&isInteger(vfinal[i-1]))||((vfinal[i-1]==")")&&isInteger(vfinal[i]))){
                         cout << "Error: invalid input" <<endl;
                         run = false;
                     }
@@ -832,8 +865,11 @@ int main (int argc, char *argv[])
                     brackcounter+=1;
                 }
                 if (brackcounter!=0){
+                    
+                    if(run){
+                        cout << "Error: invalid input" <<endl;
+                    }
                     run = false;
-                    cout << "Error: invalid input" <<endl;
                 }
             }
             
