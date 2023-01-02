@@ -5,11 +5,13 @@ sat
 sat
 sat
 sat
-Error: invalid input
 sat
-Error: invalid input
-Error: invalid input
-Error: invalid input
-Error: invalid input
-Error: invalid input
-Error: invalid input
+sat
+unsat
+sat
+unsat
+unsat
+unsat
+sat
+unsat
+unsat

@@ -769,9 +769,9 @@ int main (int argc, char *argv[])
                     break;
                 }
             }
-            for (auto keyval : codenames) {
-                find_str=keyval.first;
-                sub_str = keyval.second;
+            for (auto keyval = codenames.rbegin(); keyval != codenames.rend(); ++keyval) {
+                find_str=keyval->first;
+                sub_str = keyval->second;
                 if(find_str!=""){
                     if ((find_str.size()>=10)||((find_str.size()>0)&&isdigit(find_str[0]))){
                         run=false;
@@ -791,6 +791,7 @@ int main (int argc, char *argv[])
                     }
                 }        
             }
+            
             std::string find_str2="--";
             while((index = assignment.find(find_str2)) != string::npos){ 
                 assignment.replace(index, find_str2.length(), ""); 
@@ -820,7 +821,7 @@ int main (int argc, char *argv[])
                 for (int i = 0; i < assignment.size(); ++i) {
                     if(isalpha(assignment[i])){
                         run = false;
-                        cout << "Error: incomplete assignment" <<endl;
+                        cout << "Error: incomplete assignment"<<endl;
                         break;
                         
                     }

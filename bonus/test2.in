@@ -1,15 +1,17 @@
-a*b*c*d
-a*-(b+c+d)+a
--(b+c)+a*c+(-(d*a+c))
-a*-(b+c+d)*-b+a
--a*b+c*-d+(a*-(a*(-b+c)))
--a*b+c*-d+(a*-((-a+(b*-c)+c+d)*(-b+c)))
--a*-d+(a*-(-(-a+(b*-c)+c+d)*(-b+c))*b+c)
--a*(b)-c
-b*-(-(-c))+a*(b+-c)
-b*-(-(-c))+a*(b+-c)-
-b+()-c
-()
--()
--a+(b)-c
--a*+(b)-c
+a123
+bbb
+c12
+w2w
+a+c
+b+d
+m+nnn
+a*--a
+a*(b+c)
+a*(--b)*(-b)
+a*(b*c)
+---a*a
+a*---a
+(b*c)*(a * (--a + a) *(b))*(-c *b*a)*(B) * (-B + -((-(-(B * C + C * A * C) * C + (A + B) * (C + B) * C * C)) * B))
+(b*c)*(a * (--a + a) *(b))*(-c *b*a)*(B) * -B + -((-(-(B * C + C * A * C) * C + (A + B) * (C + B) * C * C)) * B)
+(-(AB * B + C) * (C + B * A) * AB * (C + A) * AB * AB * (A) * (AA + -AA * (A + B)) * A * A * AB * AA) * ((A + -B) * (C+D)) * (-C * D)
+(-(AB * B + C) * (C + B * A) * AB * (C + A) * AB * AB * (A) * (AA + -AA * (A + B)) * A * A * AB * AA) * ((A + -B) * (C+D)) * (-C * D + C*D)

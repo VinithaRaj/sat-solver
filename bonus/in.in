@@ -1,20 +1,4 @@
-a123
-
-a+c
-a*---a
-a+b;a:0,b:1
- ( (-a)+(a*b)) * a * (c + -b) *-c
-(a+b+c)*(a+b+-c)*(-b+a +c)*(-a*-c)
-(a+b+c)*(a+b+-c)*(-b+a +c)*(a+-b+-c)*(-a+b+c)*(-a+b+-c)*(-a+-b+c)*(-a+-c+-c)
-(a+b+c)*(a+b+-c)*(-b+a +c)*(a+-b+-c)*(-a+b+c)*(-a+b+-c)*(-a+-b+c)*(-a+-c+-b)
-(a+b+c)*(a+b+-c)*(-b+a +c)*(a+-b+-c)*(-a+b+c)*(-a+b+-c)*(-a+-b+c)
-A*B * -A
-A*(B * (-A * A) + C) * (C * - C)
-A*(B * -A + C)
---B * -(B + C) * A * --C * C * B + (A + (B + B) + B * A) + A
---B * -(B + C) * A * --C * C * B
--((B * (-A * C) * ((C * C * C + C + C) + A * C * C * C)) * (C * B))
-(-((B * (-A * C) * ((C * C) + A * C * C * C)) * (C * B)))*B * (C + B + B) * (C + A * C) * (B) * --(B * -(A) + A * B + B + A)
-(-((B * (-A * C) * (-C)) * (C * B)))*B * ( B) * (C + A * C) * (B) * --(B * -(A) ) * (C * A)
-qwerttyuqe1
-(A + A + A) * C + (-(B * C) + (C + B) + B * A) * (B)
+((--AB * AA + C * CD * B) * -(C + CD) * AA * A * aA1a * AB * (CD * AS1D + CD) * -AS1D * AS1D + CD + aA1a + AS1D + CD) * (-(AB * A * A + A * C + C + aA1a) * (AA * C + CD) * CD * B + CD * aA1a + B * -AS1D * B + A + CD + B) * (((C) * AA + -(aA1a + AB) * AB + AA * aA1a + B + CD) * ---(aA1a) * (A) * AA * aA1a + (AS1D * aA1a + AB) * B + AB + AS1D + AB) * (---((UC) * aA1a * B + UC * AS1D *- AB) * --AA * aA1a * (C) * AA + --(AB + AB) * C * AB * UC + -AA * AA * aA1a + AS1D + UC) * ((AA * CD + B + AB) * --(A) * --AB * aA1a * UA + (aA1a + UC) * -CD * C * UC + A * (C) * AA + aA1a * AA * AS1D + B) * (B + C + CD) * (CD + ---UC)
+((--AB * AA + C * CD * B) * -(C + CD) * AA * A * aA1a * AB * (CD * AS1D + CD) * -AS1D * AS1D + CD + aA1a + AS1D + CD) * (-(AB * A * A + A * C + C + aA1a) * (AA * C + CD) * CD * B + CD * aA1a + B * -AS1D * B + A + CD + B) * (((C) * AA + -(aA1a + AB) * AB + AA * aA1a + B + CD) * ---(aA1a) * (A) * AA * aA1a + (AS1D * aA1a + AB) * B + AB + AS1D + AB) * (---((UC) * aA1a * B + UC * AS1D *- AB) * --AA * aA1a * (C) * AA + --(AB + AB) * C * AB * UC + -AA * AA * aA1a + AS1D + UC) * ((AA * CD + B + AB) * --(A) * --AB * aA1a * UA + (aA1a + UC) * -CD * C * UC + A * (C) * AA + aA1a * AA * AS1D + B) * (B + C + CD) * (CD + ---UC) * ((C * UC + UA + aA1a) * --(C * AS1D + A + aA1a) * (UA) * C + (aA1a + UA + B) * B * UA * aA1a + A * AA + aA1a * UA * UC * UC + UC + AA + AA)
+((--AB * AA * -C * CD * B) * -(C * CD) * AA * -A * aA1a * AB * (CD * AS1D + CD) * -AS1D * AS1D + CD + aA1a + AS1D + CD) * (-(AB * A * A + A * C + C + aA1a) * (AA * C + CD) * CD * B + CD * aA1a + B * -AS1D * B + A + CD + B) * (((C) * AA + -(aA1a + AB) * AB + AA * aA1a + B + CD) * ---(aA1a) * (A) * AA * aA1a + (AS1D * aA1a + AB) * B + AB + AS1D + AB) * (---((UC) * aA1a * B * UC * AS1D *- AB) * --AA * aA1a * (-C) * -AA * --(AB + AB) * C * AB * UC * -AA * AA * aA1a * AS1D + UC) * ((AA * CD + B + AB) * --(A) * --AB * aA1a * UA * (-aA1a + UC) * CD * C * UC * A * (C) * AA + aA1a * AA * AS1D + B) * (B + C + CD) * (CD + ---UC) * ((C * UC + UA + aA1a) * --(C * AS1D + A + aA1a) * (UA) * C + (aA1a + UA + B) * B * UA * aA1a + A * AA + aA1a * UA * UC * UC + UC + AA + AA) * ((C * A + A) * C * -C * B + A + A + UC + C) * ((A + A) * B * A + UC * UA + UC * UC * UC * A) * (-C * -AB * UC)
+((--AB * AA ) * -(C * CD) * AA * -A * aA1a * AB * (CD * AS1D + CD) * -AS1D * AS1D + CD + aA1a + AS1D + CD) * (-(AB * A * A + A * C + C + aA1a) * (AA * C + CD) * CD * B + CD * aA1a + B * -AS1D * B + A + CD + B) * (((C) * AA + -(aA1a + AB) * AB + AA * aA1a + B + CD) * ---(aA1a) * (A) * AA * aA1a + (AS1D * aA1a + AB) * B) * (---((UC) * aA1a * B * UC * AS1D *- AB) * --AA * aA1a * (-C) * -AA * --(AB * AB) * C * AB * UC * -AA * AA * aA1a * AS1D + UC) * ((AA * CD + B + AB) * --(A) * --AB * aA1a * UA * (-UC) * CD * C * UC * A * (C) * AA * aA1a * AA * AS1D + B) * (B + C + CD) * (CD + ---UC) * ((C * UC + UA + aA1a) * --(C * AS1D + A + aA1a) * (UA) * C + (aA1a + UA + B) * B * UA * aA1a + A * AA + aA1a * UA * UC * UC + UC + AA + AA) * ((C * A + A) * C * -C * B + A + A + UC + C) * ((A + A) * B * A + UC * UA + UC * UC * UC * A) * (-C * -AB * UC) * ((UC) * A * UC + (A) * -C * C + AA * A + C + B) *(-(A + A) * B * C) * (--UA * (AA + A) * A + A * AA + AA * AA * A * UC)
