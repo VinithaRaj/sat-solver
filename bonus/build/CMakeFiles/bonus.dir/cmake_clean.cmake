@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/bonus.dir/main.cc.o"
-  "bonus.pdb"
   "bonus"
+  "bonus.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

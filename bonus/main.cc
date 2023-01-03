@@ -8,8 +8,6 @@
 #include <typeinfo>
 #include <queue>
 #include <memory>
-#include "minisat/core/SolverTypes.h"
-#include "minisat/core/Solver.h"
 using namespace std;
 
 struct Node
